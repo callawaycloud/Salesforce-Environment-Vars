@@ -20,6 +20,29 @@ A simple library for using Custom Metadata to manage simple Key/Value Environmen
 
 - Add new ENV vars @ Custom Metadata Types -> ENV Var -> Manage ENV Vars
 
+#### Notes
+
+The following types are currently supported:
+
+- `String`
+- `Integer`
+- `Decimal`
+- `Boolean`
+- `String[]`
+
+For collection types (currently just `String[]`), use the format from `JSON.serialize()`:
+
+```java
+//example how to create `Value__c` from in developer console
+System.debug(JSON.serialize(
+    new String[] {
+        '1,',
+        '2;',
+        '3'
+    }
+));
+```
+
 ### Access in apex
 
 Use `Env.get()` to access by passing in the `DeveloperName`:

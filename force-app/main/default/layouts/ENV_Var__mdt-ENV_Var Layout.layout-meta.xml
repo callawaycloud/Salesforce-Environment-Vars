@@ -15,12 +15,12 @@
                 <field>DeveloperName</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>Value__c</field>
+                <behavior>Edit</behavior>
+                <field>Datatype__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Datatype__c</field>
+                <field>Value__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

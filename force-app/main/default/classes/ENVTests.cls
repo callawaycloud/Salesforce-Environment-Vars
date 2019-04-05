@@ -1,3 +1,4 @@
+// Author: Charles Jonas (charlie@callaway.cloud)
 @isTest
 public class ENVTests {
 
@@ -52,6 +53,22 @@ public class ENVTests {
 
         Env.setCachedVars(new ENV_Var__mdt[]{var});
         Boolean retValue = (Boolean) Env.get(key);
+
+        System.assertEquals(value, retValue, 'Values Should Match');
+    }
+
+
+    @isTest static void testStringArr(){
+        String key = 'abc';
+        String[] value = new String[] {'1,','2;','[asd]|'};
+        ENV_Var__mdt var = new ENV_Var__mdt(
+            DeveloperName = key,
+            Value__c = JSON.serialize(value),
+            DataType__c = 'String[]'
+        );
+
+        Env.setCachedVars(new ENV_Var__mdt[]{var});
+        String[] retValue = (String[]) Env.get(key);
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }

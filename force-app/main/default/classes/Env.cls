@@ -1,3 +1,5 @@
+// Author: Charles Jonas (charlie@callaway.cloud)
+// v1.0 see: https://github.com/ChuckJonas/Salesforce-Environment-Vars
 public class Env {
     private static Map<String, ENV_Var__mdt> cachedVars;
 
@@ -28,6 +30,9 @@ public class Env {
             }
             when 'Boolean' {
                 return Boolean.valueOf(var.Value__c);
+            }
+            when 'String[]' {
+                return JSON.Deserialize(var.Value__c, List<String>.class);
             }
             when else{
                 return var.Value__c;
