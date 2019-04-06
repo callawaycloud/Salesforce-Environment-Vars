@@ -4,8 +4,9 @@ import * as React from 'react';
 import { ENVVarmdt, ENVVarmdtFields } from '@src/generated';
 import * as jsforce from 'jsforce';
 import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
-import { MetadataInfo } from 'jsforce';
 import { EnvVar, EnvVarItem } from './components/EnvItem';
+
+const ENV_PREFIX = ENVVarmdt.API_NAME.replace('__mdt', '');
 
 interface MetadataResult {
   success: boolean;
@@ -33,9 +34,7 @@ class App extends React.Component<{}, AppState> {
     this.mdapi = conn.metadata;
     const vars = await ENVVarmdt.retrieve((fields) => {
       return {
-        select: [
-          ...fields.select('id', 'developerName', 'datatype', 'value', 'qualifiedApiName'),
-        ],
+        select: fields.select('id', 'developerName', 'datatype', 'value', 'qualifiedApiName'),
         limit: 100,
       };
     });
@@ -67,13 +66,14 @@ class App extends React.Component<{}, AppState> {
 
     // tslint:disable-next-line: no-object-literal-type-assertion
     const payload = {
-      fullName: `ENV_Var.${itemToSave.developerName}`,
+      fullName: `${ENV_PREFIX}.${itemToSave.developerName}`,
       label: itemToSave.developerName,
       values: [
-        { field: 'Value__c', value: itemToSave.value },
-        { field: 'DataType__c', value: itemToSave.datatype },
+        { field: ENVVarmdt.FIELDS['value'].apiName, value: itemToSave.value },
+        { field: ENVVarmdt.FIELDS['datatype'].apiName, value: itemToSave.datatype },
+
       ],
-    } as MetadataInfo;
+    } as jsforce.MetadataInfo;
 
     let result: MetadataResult;
     if (itemToSave.localOnly) {
@@ -101,7 +101,7 @@ class App extends React.Component<{}, AppState> {
     if (!itemToDelete.localOnly) {
       const result = await this.mdapi.delete(
         'CustomMetadata',
-        `ENV_Var.${itemToDelete.developerName}`,
+        `${ENV_PREFIX}.${itemToDelete.developerName}`,
       ) as any as MetadataResult;
 
       if (!result.success) {
