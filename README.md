@@ -4,7 +4,7 @@ A simple library for using Custom Metadata to manage simple Key/Value Environmen
 
 ![UI Demo](https://user-images.githubusercontent.com/5217568/55663312-a63c4c00-57d9-11e9-994c-6e76ea0bd135.gif)
 
-**based on an idea from Ralph Callaway**
+*idea inspired by Ralph Callaway's work*
 
 ## Usage
 
