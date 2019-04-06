@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <name>ApexClass</name>
+    <members>ENVTests</members>
+    <members>EditEnvVars</members>
+    <members>Env</members>
+  </types>
+  <types>
+    <name>Layout</name>
+    <members>ENV_Var__mdt-ENV_Var Layout</members>
+  </types>
+  <types>
+    <name>CustomObject</name>
+    <members>ENV_Var__mdt</members>
+  </types>
+  <types>
+    <name>CustomField</name>
+    <members>ENV_Var__mdt.Datatype__c</members>
+    <members>ENV_Var__mdt.Value__c</members>
+  </types>
+  <types>
+    <name>ApexPage</name>
+    <members>Env_Vars</members>
+  </types>
+  <types>
+    <name>StaticResource</name>
+    <members>ENVVars</members>
+  </types>
+  <version>45.0</version>
+</Package>

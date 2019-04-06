@@ -32,6 +32,11 @@
                 <default>false</default>
                 <label>Decimal</label>
             </value>
+            <value>
+                <fullName>String[]</fullName>
+                <default>false</default>
+                <label>String[]</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

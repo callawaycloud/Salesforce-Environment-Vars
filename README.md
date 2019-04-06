@@ -13,12 +13,19 @@ A simple library for using Custom Metadata to manage simple Key/Value Environmen
 1. `git clone https://github.com/ChuckJonas/Salesforce-Environment-Vars.git`
 1. `cd Salesforce-Environment-Vars`
 1. `mkdir deploy`
-1. `sfdx force:source:convert -d deploy/ --packagename package_name`
-1. `sfdx force:mdapi:deploy -d deploy/ -u "YOUR_USERNAME_HERE" -l RunSpecifiedTests -r EnvTests`
+2. `sfdx force:source:convert -d deploy/`
+3. `sfdx force:mdapi:deploy -d deploy/ -u "YOUR_USERNAME_HERE" -l RunSpecifiedTests -r EnvTests`
+
+**NOTE:** This application comes with a custom user interface for easier management of the ENV Vars. If you'd prefer not to use it, delete the following before deploying:
+
+- `force-app/main/default/pages`
+- `force-app/main/default/staticresources`
 
 ### Setup
 
-- Add new ENV vars @ Custom Metadata Types -> ENV Var -> Manage ENV Vars
+If UI was installed, navigate to `/apex/env_vars` and setup your Environment Variables.  Otherwise, just manage like any other CustomMetadata.
+
+![UI Demo](https://user-images.githubusercontent.com/5217568/55663312-a63c4c00-57d9-11e9-994c-6e76ea0bd135.gif)
 
 #### Notes
 
@@ -30,18 +37,7 @@ The following types are currently supported:
 - `Boolean`
 - `String[]`
 
-For collection types (currently just `String[]`), use the format from `JSON.serialize()`:
-
-```java
-//example how to create `Value__c` from in developer console
-System.debug(JSON.serialize(
-    new String[] {
-        '1,',
-        '2;',
-        '3'
-    }
-));
-```
+For collection types (currently just `String[]`), use a json array syntax.
 
 ### Access in apex
 
@@ -51,3 +47,7 @@ Use `Env.get()` to access by passing in the `DeveloperName`:
 // cast to datatype
 Integer retries = (Integer) Env.get('Account_Sync_Retries');
 ```
+
+### Contributing/Modifying
+
+This project is built off the [B.A.S.S. Stack](https://github.com/ChuckJonas/bad-ass-salesforce-stack).  See Readme for details on how to develop.

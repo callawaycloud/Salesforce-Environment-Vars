@@ -1,0 +1,19 @@
+{
+  "verbose": true,
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js"
+  ],
+  "transform": {
+    "\\.(ts|tsx)$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "\\.(css|scss|less)$": "<rootDir>/config/__mocks__/styleMock.js",
+    "\\.(png|jpg|gif|ttf|eot|svg)$": "<rootDir>/config/__mocks__/fileMock.js",
+    "@src/(.*)": "<rootDir>/src/$1",
+    "@gen/(.*)": "<rootDir>/src/generated/$1"
+  },
+  "testRegex": "/tests/.*\\.(ts|tsx|js)$",
+  "unmockedModulePathPatterns": []
+}

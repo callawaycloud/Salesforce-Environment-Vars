@@ -1,0 +1,19 @@
+<apex:page showHeader="true" sidebar="false" standardStylesheets="false" docType="html-5.0">
+    <script type="text/javascript">
+        //rest details
+        const __ACCESSTOKEN__ = '{!$Api.Session_ID}';
+        const __RESTHOST__ = '';
+</script>
+    <div id="root"></div>
+    <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.local != '1'}">
+        <script type='text/javascript' src="{!URLFOR($Resource.ENVVars, 'dist/vendors.js')}"></script>
+        <script type='application/json' src="{!URLFOR($Resource.ENVVars, 'dist/vendors.js.map')}"></script>
+        <script type='text/javascript' src="{!URLFOR($Resource.ENVVars, 'dist/app.js')}"></script>
+        <script type='application/json' src="{!URLFOR($Resource.ENVVars, 'dist/app.js.map')}"></script>
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none" rendered="{!$CurrentPage.parameters.local == '1'}">
+        <script src="https://localhost:8080/vendors.js" ></script>
+        <script src="https://localhost:8080/app.js" ></script>
+    </apex:outputPanel>
+</apex:page>
