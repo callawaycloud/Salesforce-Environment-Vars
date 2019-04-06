@@ -44,6 +44,7 @@ Use `Env.get()` to access by passing in the `DeveloperName`:
 ``` java
 // cast to datatype
 Integer retries = (Integer) Env.get('Account_Sync_Retries');
+String[] types = (String[]) Env.get('Status_Types');
 ```
 
 ### Contributing/Modifying
