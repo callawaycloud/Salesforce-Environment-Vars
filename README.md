@@ -2,7 +2,7 @@
 
 A simple library for using Custom Metadata to manage simple Key/Value Environment variables
 
-![Setting up a env var](https://user-images.githubusercontent.com/5217568/55655324-213d3c80-57b1-11e9-8b90-4ff6ef7684ff.png)
+![UI Demo](https://user-images.githubusercontent.com/5217568/55663312-a63c4c00-57d9-11e9-994c-6e76ea0bd135.gif)
 
 ## Usage
 
@@ -24,8 +24,6 @@ A simple library for using Custom Metadata to manage simple Key/Value Environmen
 ### Setup
 
 If UI was installed, navigate to `/apex/env_vars` and setup your Environment Variables.  Otherwise, just manage like any other CustomMetadata.
-
-![UI Demo](https://user-images.githubusercontent.com/5217568/55663312-a63c4c00-57d9-11e9-994c-6e76ea0bd135.gif)
 
 #### Notes
 
