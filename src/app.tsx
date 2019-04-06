@@ -1,4 +1,4 @@
-import { Card, Button, message } from 'antd';
+import { Card, Button, message, Input, Divider } from 'antd';
 import { hot } from 'react-hot-loader'; // needs to be before react!
 import * as React from 'react';
 import { ENVVarmdt, ENVVarmdtFields } from '@src/generated';
@@ -15,6 +15,7 @@ interface MetadataResult {
 
 interface AppState {
   vars: EnvVar[];
+  filter?: string;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -43,7 +44,8 @@ class App extends React.Component<{}, AppState> {
     }
   }
 
-  // local changes handlers
+  // === LOCAL STATE HANDLERS===
+
   private updateVar = (index: number, field: keyof ENVVarmdtFields, val: string) => {
     const vars = [...this.state.vars];
     vars[index] = { ...vars[index], ...{ [field]: val, hasChanges: true } };
@@ -59,7 +61,8 @@ class App extends React.Component<{}, AppState> {
     this.setState({ vars });
   }
 
-  // DML Handlers
+  // === DML HANDLERS ===
+
   private saveVar = async (index: number) => {
 
     const itemToSave = this.state.vars[index];
@@ -95,7 +98,6 @@ class App extends React.Component<{}, AppState> {
   }
 
   private removeVar = async (index: number) => {
-
     const itemToDelete = this.state.vars[index];
 
     if (!itemToDelete.localOnly) {
@@ -113,8 +115,10 @@ class App extends React.Component<{}, AppState> {
     this.setState({ vars });
   }
 
+  // === RENDER ===
+
   public render() {
-    const vars = this.state.vars.map((v, i) => {
+    const varEditors = this.filterVars().map((v, i) => {
       return (
         <EnvVarItem
           key={i}
@@ -128,10 +132,26 @@ class App extends React.Component<{}, AppState> {
     });
     return (
       <Card title='Env Vars Management'>
-        {vars}
+        <Input.Search
+          placeholder='Filter Env Vars'
+          value={this.state.filter}
+          onChange={(e) => this.setState({filter: e.target.value})}
+          style={{width: '35%'}}
+        />
+        <Divider dashed={true} />
+        {varEditors}
         <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
       </Card>
     );
+  }
+
+  private filterVars() {
+    let vars = this.state.vars;
+    if (this.state.filter) {
+      const filter = this.state.filter.toLocaleLowerCase();
+      vars = vars.filter((v) => v.developerName && v.developerName.toLocaleLowerCase().includes(filter));
+    }
+    return vars;
   }
 
 }
