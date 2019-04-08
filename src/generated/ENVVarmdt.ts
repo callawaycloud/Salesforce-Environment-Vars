@@ -9,9 +9,6 @@ export type ENVVarmdtFields = Partial<FieldProps<ENVVarmdt>>;
 export class ENVVarmdt extends RestObject {
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'Custom Metadata Record ID', externalId: false })
     public readonly id: string;
-    /**
-     * The key that will be used to retrieve the VAR
-     */
     @sField({ apiName: 'DeveloperName', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Custom Metadata Record Name', externalId: false })
     public readonly developerName: string;
     @sField({ apiName: 'MasterLabel', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Label', externalId: false })
@@ -34,6 +31,11 @@ export class ENVVarmdt extends RestObject {
      */
     @sField({ apiName: 'Value__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Value', externalId: false })
     public readonly value: string;
+    /**
+     * Grouping for this ENV Var (best managed by UI)
+     */
+    @sField({ apiName: 'Group__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Group', externalId: false })
+    public readonly group: string;
 
     constructor(fields?: ENVVarmdtFields, client?: Rest) {
         super('ENV_Var__mdt', client);
@@ -46,6 +48,7 @@ export class ENVVarmdt extends RestObject {
         this.qualifiedApiName = void 0;
         this.datatype = void 0;
         this.value = void 0;
+        this.group = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }

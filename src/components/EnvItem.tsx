@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { Input, Select, Button, Popconfirm, Icon } from 'antd';
-import { ENVVarmdtFields } from '@src/generated';
 import TextArea from 'antd/lib/input/TextArea';
+import { EnvVar, DataType } from '@src/types';
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
-export type EnvVar = ENVVarmdtFields & { hasChanges?: boolean, localOnly?: boolean, dmlError?: boolean, keyError?: boolean, typeError?: boolean };
-export type DataType = 'String' | 'Integer' | 'Decimal' | 'Boolean' | 'String[]';
-
 export interface EnvVarItemProps {
   item: EnvVar;
-  index: number;
-  onRemove: (index: number) => void;
-  onUpdate: (index: number, field: keyof ENVVarmdtFields, value: string) => void;
-  onSave: (index: number) => void;
+  onRemove: (item: EnvVar) => void;
+  onUpdate: (item: EnvVar, field: keyof EnvVar, value: string) => void;
+  onSave: (item: EnvVar) => void;
+  onDragStart: (e: any, item: EnvVar) => void;
+  onDragOver: (draggedOver: EnvVar) => void;
+  onDragEnd: () => void;
 }
 
 export class EnvVarItem extends React.Component<EnvVarItemProps, any> {
+
   public render() {
     let del: any;
     if (this.props.item.localOnly) {
-      del = <Button type='danger' icon='close' onClick={() => { this.props.onRemove(this.props.index); }} />;
+      del = <Button type='danger' icon='close' onClick={() => { this.props.onRemove(this.props.item); }} />;
     } else {
       del = (
         <Popconfirm
@@ -29,14 +29,14 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, any> {
           okType='danger'
           okText='DELETE'
           cancelText='No'
-          onConfirm={() => { this.props.onRemove(this.props.index); }} >
+          onConfirm={() => { this.props.onRemove(this.props.item); }} >
           <Button type='danger' icon='delete' />
         </Popconfirm>
       );
     }
 
-    const typeError = !this.validateType(this.props.item.datatype as DataType, this.props.item.value);
-    const keyError = this.props.item.developerName && this.props.item.developerName.indexOf(' ') > -1; // [TODO] Better validation
+    const typeError = !this.validateType(this.props.item.dataType, this.props.item.value);
+    const keyError = this.props.item.key && this.props.item.key.indexOf(' ') > -1; // [TODO] Better validation
 
     const keyStyle: React.CSSProperties = { width: '20%' };
     if (keyError) {
@@ -48,22 +48,29 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, any> {
       valueStyle.color = 'red';
     }
 
-    const canSave = this.props.item.developerName && this.props.item.hasChanges && (!typeError && !keyError);
+    const canSave = this.props.item.key && this.props.item.hasChanges && (!typeError && !keyError);
     return (
-      <div style={{ marginTop: 5 }}>
+      <div style={{ marginTop: 5 }} onDragOver={() => this.props.onDragOver(this.props.item)}>
         <InputGroup compact={true}>
+          <Button
+            title='Drag/Drop'
+            draggable={true}
+            onDragStart={(e: any) => this.props.onDragStart(e, this.props.item)}
+            onDragEnd={this.props.onDragEnd}
+            icon='drag'
+          />
           <Input
             style={keyStyle}
-            onChange={(e) => { this.props.onUpdate(this.props.index, 'developerName', e.target.value); }}
+            onChange={(e) => { this.props.onUpdate(this.props.item, 'key', e.target.value); }}
             placeholder={'KEY'}
             disabled={!this.props.item.localOnly}
-            value={this.props.item.developerName}
+            value={this.props.item.key}
           />
           <Select
             placeholder={'Data Type'}
-            onChange={(e) => { this.props.onUpdate(this.props.index, 'datatype', e); }}
+            onChange={(e) => { this.props.onUpdate(this.props.item, 'dataType', e); }}
             style={{ width: '15%' }}
-            value={this.props.item.datatype}
+            value={this.props.item.dataType}
           >
             <Option key='String'>String</Option>
             <Option key='Integer'>Integer</Option>
@@ -76,9 +83,9 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, any> {
             style={valueStyle}
             value={this.props.item.value}
             autosize={true}
-            onChange={(e) => { this.props.onUpdate(this.props.index, 'value', e.target.value); }}
+            onChange={(e) => { this.props.onUpdate(this.props.item, 'value', e.target.value); }}
           />
-          {canSave && <Button type='primary' icon='save' onClick={() => { this.props.onSave(this.props.index); }} />}
+          {canSave && <Button type='primary' icon='save' onClick={() => { this.props.onSave(this.props.item); }} />}
           {del}
         </InputGroup>
 

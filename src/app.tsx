@@ -4,26 +4,26 @@ import * as React from 'react';
 import { ENVVarmdt, ENVVarmdtFields } from '@src/generated';
 import * as jsforce from 'jsforce';
 import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
-import { EnvVar, EnvVarItem } from './components/EnvItem';
+import { EnvVarItem } from './components/EnvItem';
+import { EnvVar, DataType, MetadataResult } from './types';
+import { EnvGroup } from './components/EnvGroup';
 
 const ENV_PREFIX = ENVVarmdt.API_NAME.replace('__mdt', '');
 
-interface MetadataResult {
-  success: boolean;
-  errors: { message: string };
-}
-
 interface AppState {
   vars: EnvVar[];
+  groups: string[];
   filter?: string;
 }
 
 class App extends React.Component<{}, AppState> {
   private mdapi: jsforce.Metadata;
+  private draggedItem: EnvVar;
   constructor(props: any) {
     super(props);
     this.state = {
       vars: [],
+      groups: [''],
     };
   }
 
@@ -33,53 +33,163 @@ class App extends React.Component<{}, AppState> {
       accessToken: DEFAULT_CONFIG.accessToken,
     });
     this.mdapi = conn.metadata;
-    const vars = await ENVVarmdt.retrieve((fields) => {
+    const varsRecords = await ENVVarmdt.retrieve((fields) => {
       return {
-        select: fields.select('id', 'developerName', 'datatype', 'value', 'qualifiedApiName'),
+        select: fields.select('id', 'developerName', 'datatype', 'value', 'group'),
         limit: 100,
       };
     });
-    if (vars.length > 0) {
-      this.setState({ vars });
+    if (varsRecords.length > 0) {
+      const groups = varsRecords.reduce((groups, vRec) => {
+        const group = vRec.group || '';
+        if (!groups.includes(group)) {
+          groups.push(group);
+        }
+        return groups;
+      }, []);
+      const vars = varsRecords.map<EnvVar>((vRec) => {
+        const {developerName: key, value, datatype, group } = vRec;
+        const dataType = datatype as DataType;
+        return {
+          key,
+          value,
+          dataType,
+          group: group || '',
+        };
+      });
+      if (!groups.includes('')) {
+        groups.push('');
+      }
+      this.setState({ vars, groups });
     }
+  }
+
+  // Drag & Drop
+  private handleDragStart = (e: any, item: EnvVar) => {
+    this.draggedItem = item;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.parentNode);
+    e.dataTransfer.setDragImage(e.target.parentNode, 20, 20);
+  }
+
+  public handleDragOver = (draggedOverItem: EnvVar) => {
+
+    // if the item is dragged over itself, ignore
+    if (this.draggedItem === draggedOverItem) {
+      return;
+    }
+
+    const index = this.state.vars.findIndex((v) => v === draggedOverItem);
+    const vars = this.state.vars.filter((v) => v !== this.draggedItem);
+    const newDraggedItem = { ...this.draggedItem };
+    this.draggedItem = newDraggedItem;
+    if (this.draggedItem.group !== draggedOverItem.group) {
+      newDraggedItem.group = draggedOverItem.group;
+      newDraggedItem.hasChanges = true;
+    }
+    vars.splice(index, 0, newDraggedItem);
+    this.setState({ vars });
+  }
+
+  public handleDragEnd = () => {
+    this.draggedItem = null;
+  }
+
+  public handleDragOverNoGroup = (group: string) => {
+    const index = this.state.vars.findIndex((v) => v === this.draggedItem);
+    const newDraggedItem = { ...this.draggedItem };
+    this.draggedItem = newDraggedItem;
+    if (this.draggedItem.group !== group) {
+      newDraggedItem.group = group;
+      newDraggedItem.hasChanges = true;
+    }
+    const vars = [...this.state.vars];
+    vars[index] = newDraggedItem;
+    const groups = [...this.state.groups];
+    this.setState({vars, groups});
+  }
+
+  public newGroup = () => {
+    const groups = [...this.state.groups];
+    groups.push(undefined);
+    this.setState({groups});
+  }
+
+  public cancelNewGroup = () => {
+    const groups = this.state.groups.filter((g) => g !== undefined);
+    this.setState({groups});
   }
 
   // === LOCAL STATE HANDLERS===
 
-  private updateVar = (index: number, field: keyof ENVVarmdtFields, val: string) => {
+  private updateVar = (item: EnvVar, field: keyof EnvVar, val: string) => {
+    const index = this.state.vars.findIndex((v) => v === item);
     const vars = [...this.state.vars];
-    vars[index] = { ...vars[index], ...{ [field]: val, hasChanges: true } };
+    vars[index] = { ...item, ...{ [field]: val, hasChanges: true } };
     this.setState({ vars });
   }
 
   private addNew = () => {
+    console.log(this.state.groups);
     const vars = [...this.state.vars];
     vars.push({
-      datatype: 'String',
+      dataType: 'String',
       localOnly: true,
+      group: '',
     });
     this.setState({ vars });
   }
 
   // === DML HANDLERS ===
 
-  private saveVar = async (index: number) => {
+  private updateGroupName = async (oldName: string, newName: string) => {
+    const gIndex = this.state.groups.indexOf(oldName);
+    const groups = [...this.state.groups];
+    groups[gIndex] = newName;
 
-    const itemToSave = this.state.vars[index];
+    const vars: EnvVar[] = [];
+    for (const v of this.state.vars) {
+      if (v.group === oldName) {
+        const payload = {
+          fullName: `${ENV_PREFIX}.${v.key}`,
+          label: v.key,
+          values: [
+            { field: ENVVarmdt.FIELDS['group'].apiName, value: newName },
+          ],
+        } as jsforce.MetadataInfo;
+        const result = await this.mdapi.update('CustomMetadata', payload) as any as MetadataResult;
+        if (!result.success) {
+          console.log('Failed to change group', v, newName);
+        }
+        vars.push({...v, ...{group: newName}});
+      }
+      vars.push(v);
+    }
+
+    // make sure we always have an empty group
+    if (!groups.includes('')) {
+      groups.push('');
+    }
+    this.setState({vars, groups});
+  }
+
+  private saveVar = async (item: EnvVar) => {
+
+    const index = this.state.vars.findIndex((v) => v === item);
 
     // tslint:disable-next-line: no-object-literal-type-assertion
     const payload = {
-      fullName: `${ENV_PREFIX}.${itemToSave.developerName}`,
-      label: itemToSave.developerName,
+      fullName: `${ENV_PREFIX}.${item.key}`,
+      label: item.key,
       values: [
-        { field: ENVVarmdt.FIELDS['value'].apiName, value: itemToSave.value },
-        { field: ENVVarmdt.FIELDS['datatype'].apiName, value: itemToSave.datatype },
-
+        { field: ENVVarmdt.FIELDS['value'].apiName, value: item.value },
+        { field: ENVVarmdt.FIELDS['datatype'].apiName, value: item.dataType },
+        { field: ENVVarmdt.FIELDS['group'].apiName, value: item.group },
       ],
     } as jsforce.MetadataInfo;
 
     let result: MetadataResult;
-    if (itemToSave.localOnly) {
+    if (item.localOnly) {
       result = await this.mdapi.create('CustomMetadata', payload) as any as MetadataResult;
     } else {
       result = await this.mdapi.update('CustomMetadata', payload) as any as MetadataResult;
@@ -93,17 +203,17 @@ class App extends React.Component<{}, AppState> {
     }
 
     const vars = [...this.state.vars];
-    vars[index] = { ...vars[index], ...newVar };
+    vars[index] = { ...item, ...newVar };
     this.setState({ vars });
   }
 
-  private removeVar = async (index: number) => {
-    const itemToDelete = this.state.vars[index];
+  private removeVar = async (item: EnvVar) => {
+    const index = this.state.vars.findIndex((v) => v === item);
 
-    if (!itemToDelete.localOnly) {
+    if (!item.localOnly) {
       const result = await this.mdapi.delete(
         'CustomMetadata',
-        `${ENV_PREFIX}.${itemToDelete.developerName}`,
+        `${ENV_PREFIX}.${item.key}`,
       ) as any as MetadataResult;
 
       if (!result.success) {
@@ -118,18 +228,47 @@ class App extends React.Component<{}, AppState> {
   // === RENDER ===
 
   public render() {
-    const varEditors = this.filterVars().map((v, i) => {
-      return (
-        <EnvVarItem
-          key={i}
-          index={i}
-          item={v}
-          onRemove={this.removeVar}
-          onSave={this.saveVar}
-          onUpdate={this.updateVar}
+    console.log(this.state.groups);
+    const vars = this.filterVars();
+
+    const groupVars: {[key: string]: JSX.Element[]} = {};
+    for (const group of this.state.groups) {
+      const gVars = vars.filter((v) => v.group === group);
+
+      groupVars[group] = gVars.map((v, i) => {
+        return (
+          <EnvVarItem
+            key={i}
+            item={v}
+            onRemove={this.removeVar}
+            onSave={this.saveVar}
+            onUpdate={this.updateVar}
+            onDragEnd={this.handleDragEnd}
+            onDragOver={this.handleDragOver}
+            onDragStart={this.handleDragStart}
+          />
+        );
+      });
+    }
+
+    const groupElements = [];
+    for (const groupKey of Object.keys(groupVars).sort()) {
+      let group = groupKey;
+      if (group === 'undefined') {
+        group = undefined; // yuck
+      }
+      groupElements.push((
+        <EnvGroup
+          key={groupKey}
+          group={group}
+          items={groupVars[group]}
+          onCancel={this.cancelNewGroup}
+          onDragOverEmptyGroup={this.handleDragOverNoGroup}
+          onGroupNameSubmit={this.updateGroupName}
         />
-      );
-    });
+      ));
+    }
+
     return (
       <Card title='Env Vars Management'>
         <Input.Search
@@ -139,8 +278,9 @@ class App extends React.Component<{}, AppState> {
           style={{width: '35%'}}
         />
         <Divider dashed={true} />
-        {varEditors}
+        {groupElements}
         <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
+        <Button style={{ marginTop: 15 }} type='dashed' icon='group' onClick={() => this.newGroup()}>Add Group</Button>
       </Card>
     );
   }
@@ -149,7 +289,7 @@ class App extends React.Component<{}, AppState> {
     let vars = this.state.vars;
     if (this.state.filter) {
       const filter = this.state.filter.toLocaleLowerCase();
-      vars = vars.filter((v) => v.developerName && v.developerName.toLocaleLowerCase().includes(filter));
+      vars = vars.filter((v) => v.key && v.key.toLocaleLowerCase().includes(filter));
     }
     return vars;
   }

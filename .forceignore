@@ -12,4 +12,4 @@ package.xml
 **/__tests__/**
 
 **/profiles
-**/custommetadata
+**/CustomMetadata

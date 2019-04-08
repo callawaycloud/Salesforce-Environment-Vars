@@ -1,6 +1,6 @@
 {
   "auth": {
-    "username": "SalesforceEnvironmentVars"
+    "username": "scratch"
   },
   "sObjects": ["ENV_Var__mdt"],
   "outPath": "./src/generated"
