@@ -34,6 +34,9 @@ public class Env {
             when 'String[]' {
                 return JSON.Deserialize(var.Value__c, List<String>.class);
             }
+            when 'Map<String,String>' {
+                return JSON.Deserialize(var.Value__c, Map<String, String>.class);
+            }
             when else{
                 return var.Value__c;
             }

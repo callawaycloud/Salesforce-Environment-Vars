@@ -37,6 +37,11 @@
                 <default>false</default>
                 <label>String[]</label>
             </value>
+            <value>
+                <fullName>Map&lt;String,String&gt;</fullName>
+                <default>false</default>
+                <label>Map&lt;String,String&gt;</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

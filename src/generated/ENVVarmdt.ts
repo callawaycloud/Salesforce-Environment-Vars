@@ -36,6 +36,11 @@ export class ENVVarmdt extends RestObject {
      */
     @sField({ apiName: 'Group__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Group', externalId: false })
     public readonly group: string;
+    /**
+     * Describe how this setting is used, where it's used and any notes about how to enter the values
+     */
+    @sField({ apiName: 'Notes__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Notes', externalId: false })
+    public readonly notes: string;
 
     constructor(fields?: ENVVarmdtFields, client?: Rest) {
         super('ENV_Var__mdt', client);
@@ -49,6 +54,7 @@ export class ENVVarmdt extends RestObject {
         this.datatype = void 0;
         this.value = void 0;
         this.group = void 0;
+        this.notes = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }

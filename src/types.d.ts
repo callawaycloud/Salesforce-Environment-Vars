@@ -14,13 +14,14 @@ interface MetadataResult {
   errors: { message: string };
 }
 
-type DataType = 'String' | 'Integer' | 'Decimal' | 'Boolean' | 'String[]';
+type DataType = 'String' | 'Integer' | 'Decimal' | 'Boolean' | 'String[]' | 'Map<String,String>';
 
 interface EnvVar {
   key?: string;
-  dataType: 'String' | 'Integer' | 'Decimal' | 'Boolean' | 'String[]';
+  dataType: DataType;
   value?: string
   group?: string;
+  notes?: string;
   hasChanges?: boolean;
   localOnly?: boolean;
   dmlError?: boolean;

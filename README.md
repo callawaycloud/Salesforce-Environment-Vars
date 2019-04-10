@@ -34,10 +34,9 @@ The following types are currently supported:
 - `String`
 - `Integer`
 - `Decimal`
-- `Boolean`
-- `String[]`
-
-For collection types (currently just `String[]`), use a json array syntax.
+- `Boolean`: Format: `true` or `false`
+- `String[]`: Format: `["a","b","c"]`
+- `Map<String,String>`: Format: `{"456":"xyz","123":"abc"}`
 
 ### Access in apex
 

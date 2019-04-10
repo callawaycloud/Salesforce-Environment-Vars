@@ -72,4 +72,19 @@ public class ENVTests {
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }
+
+    @isTest static void testStringMap(){
+        String key = 'abc';
+        Map<string,string> value = new Map<string,string> {'123'=>'abc', '456' => 'xyz'};
+        ENV_Var__mdt var = new ENV_Var__mdt(
+            DeveloperName = key,
+            Value__c = JSON.serialize(value),
+            DataType__c = 'Map<String,String>'
+        );
+
+        Env.setCachedVars(new ENV_Var__mdt[]{var});
+        Map<String,String> retValue = (Map<String,String>) Env.get(key);
+
+        System.assertEquals(value, retValue, 'Values Should Match');
+    }
 }

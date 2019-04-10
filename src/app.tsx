@@ -7,6 +7,7 @@ import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
 import { EnvVarItem } from './components/EnvItem';
 import { EnvVar, DataType, MetadataResult } from './types';
 import { EnvGroup } from './components/EnvGroup';
+import { TableOfContents } from './components/tableOfContents';
 
 const ENV_PREFIX = ENVVarmdt.API_NAME.replace('__mdt', '');
 
@@ -35,8 +36,7 @@ class App extends React.Component<{}, AppState> {
     this.mdapi = conn.metadata;
     const varsRecords = await ENVVarmdt.retrieve((fields) => {
       return {
-        select: fields.select('id', 'developerName', 'datatype', 'value', 'group'),
-        limit: 100,
+        select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes'),
       };
     });
     if (varsRecords.length > 0) {
@@ -48,13 +48,14 @@ class App extends React.Component<{}, AppState> {
         return groups;
       }, []);
       const vars = varsRecords.map<EnvVar>((vRec) => {
-        const {developerName: key, value, datatype, group } = vRec;
+        const {developerName: key, value, datatype, group, notes } = vRec;
         const dataType = datatype as DataType;
         return {
           key,
           value,
           dataType,
           group: group || '',
+          notes,
         };
       });
       if (!groups.includes('')) {
@@ -185,6 +186,7 @@ class App extends React.Component<{}, AppState> {
         { field: ENVVarmdt.FIELDS['value'].apiName, value: item.value },
         { field: ENVVarmdt.FIELDS['datatype'].apiName, value: item.dataType },
         { field: ENVVarmdt.FIELDS['group'].apiName, value: item.group },
+        { field: ENVVarmdt.FIELDS['notes'].apiName, value: item.notes },
       ],
     } as jsforce.MetadataInfo;
 
@@ -269,12 +271,23 @@ class App extends React.Component<{}, AppState> {
       ));
     }
 
+    let toc = (
+      <TableOfContents
+        onTitleClick={(key) => this.setState({filter: key})}
+        vars={this.state.vars}
+      />
+    );
+
     return (
-      <Card title='Env Vars Management'>
+      <Card
+        title='Enviroment Variables'
+        extra={toc}
+      >
         <Input.Search
           placeholder='Filter Env Vars'
           value={this.state.filter}
           onChange={(e) => this.setState({filter: e.target.value})}
+          allowClear={true}
           style={{width: '35%'}}
         />
         <Divider dashed={true} />
