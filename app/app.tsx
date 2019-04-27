@@ -1,7 +1,7 @@
 import { Card, Button, message, Input, Divider } from 'antd';
 import { hot } from 'react-hot-loader'; // needs to be before react!
 import * as React from 'react';
-import { ENVVarmdt, ENVVarmdtFields } from '@src/generated';
+import { EnvVarRecord } from '@src/generated';
 import * as jsforce from 'jsforce';
 import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
 import { EnvVarItem } from './components/EnvItem';
@@ -9,7 +9,7 @@ import { EnvVar, DataType, MetadataResult } from './types';
 import { EnvGroup } from './components/EnvGroup';
 import { TableOfContents } from './components/tableOfContents';
 
-const ENV_PREFIX = ENVVarmdt.API_NAME.replace('__mdt', '');
+const ENV_PREFIX = EnvVarRecord.API_NAME.replace('__mdt', '');
 
 interface AppState {
   vars: EnvVar[];
@@ -34,7 +34,7 @@ class App extends React.Component<{}, AppState> {
       accessToken: DEFAULT_CONFIG.accessToken,
     });
     this.mdapi = conn.metadata;
-    const varsRecords = await ENVVarmdt.retrieve((fields) => {
+    const varsRecords = await EnvVarRecord.retrieve((fields) => {
       return {
         select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes'),
       };
@@ -155,7 +155,7 @@ class App extends React.Component<{}, AppState> {
           fullName: `${ENV_PREFIX}.${v.key}`,
           label: v.key,
           values: [
-            { field: ENVVarmdt.FIELDS['group'].apiName, value: newName },
+            { field: EnvVarRecord.FIELDS['group'].apiName, value: newName },
           ],
         } as jsforce.MetadataInfo;
         const result = await this.mdapi.update('CustomMetadata', payload) as any as MetadataResult;
@@ -183,10 +183,10 @@ class App extends React.Component<{}, AppState> {
       fullName: `${ENV_PREFIX}.${item.key}`,
       label: item.key,
       values: [
-        { field: ENVVarmdt.FIELDS['value'].apiName, value: item.value },
-        { field: ENVVarmdt.FIELDS['datatype'].apiName, value: item.dataType },
-        { field: ENVVarmdt.FIELDS['group'].apiName, value: item.group },
-        { field: ENVVarmdt.FIELDS['notes'].apiName, value: item.notes },
+        { field: EnvVarRecord.FIELDS['value'].apiName, value: item.value },
+        { field: EnvVarRecord.FIELDS['datatype'].apiName, value: item.dataType },
+        { field: EnvVarRecord.FIELDS['group'].apiName, value: item.group },
+        { field: EnvVarRecord.FIELDS['notes'].apiName, value: item.notes },
       ],
     } as jsforce.MetadataInfo;
 
@@ -271,7 +271,7 @@ class App extends React.Component<{}, AppState> {
       ));
     }
 
-    let toc = (
+    const toc = (
       <TableOfContents
         onTitleClick={(key) => this.setState({filter: key})}
         vars={this.state.vars}

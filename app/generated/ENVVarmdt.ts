@@ -1,12 +1,12 @@
-import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps } from "ts-force";
-import "./";
+import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps } from 'ts-force';
+import './';
 
-export type ENVVarmdtFields = Partial<FieldProps<ENVVarmdt>>;
+export type ENVVarmdtFields = Partial<FieldProps<EnvVarRecord>>;
 
 /**
  * Generated class for ENV_Var__mdt
  */
-export class ENVVarmdt extends RestObject {
+export class EnvVarRecord extends RestObject {
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'Custom Metadata Record ID', externalId: false })
     public readonly id: string;
     @sField({ apiName: 'DeveloperName', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Custom Metadata Record Name', externalId: false })
@@ -61,20 +61,20 @@ export class ENVVarmdt extends RestObject {
 
     public static API_NAME: 'ENV_Var__mdt' = 'ENV_Var__mdt';
     public readonly _TYPE_: 'ENV_Var__mdt' = 'ENV_Var__mdt';
-    private static _fields: { [P in keyof FieldProps<ENVVarmdt>]: SFieldProperties; };
+    private static _fields: { [P in keyof FieldProps<EnvVarRecord>]: SFieldProperties; };
 
     public static get FIELDS() {
-        return this._fields = this._fields ? this._fields : ENVVarmdt.getPropertiesMeta<FieldProps<ENVVarmdt>, ENVVarmdt>(ENVVarmdt)
+        return this._fields = this._fields ? this._fields : EnvVarRecord.getPropertiesMeta<FieldProps<EnvVarRecord>, EnvVarRecord>(EnvVarRecord);
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<ENVVarmdt>) => SOQLQueryParams) | string): Promise<ENVVarmdt[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<EnvVarRecord>) => SOQLQueryParams) | string): Promise<EnvVarRecord[]> {
 
-        let qry = typeof qryParam === 'function' ? buildQuery(ENVVarmdt, qryParam) : qryParam;
-        return await RestObject.query<ENVVarmdt>(ENVVarmdt, qry);
+        const qry = typeof qryParam === 'function' ? buildQuery(EnvVarRecord, qryParam) : qryParam;
+        return RestObject.query<EnvVarRecord>(EnvVarRecord, qry);
 
     }
 
-    public static fromSFObject(sob: SObject): ENVVarmdt {
-        return new ENVVarmdt().mapFromQuery(sob);
+    public static fromSFObject(sob: SObject): EnvVarRecord {
+        return new EnvVarRecord().mapFromQuery(sob);
     }
 }

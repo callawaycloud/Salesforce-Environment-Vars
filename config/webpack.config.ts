@@ -2,43 +2,42 @@ import * as path from 'path';
 import * as webpack from 'webpack';
 import * as webpackDevServer from 'webpack-dev-server';
 import * as fs from 'fs';
-
-const DashboardPlugin = require('webpack-dashboard/plugin');
+import lessToJs from 'less-vars-to-js';
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+/** Setup Paths */
+const root = path.resolve(__dirname, '..');
+const src = path.resolve(root, 'app');
 const PATHS = {
-  root: path.resolve(__dirname, '..'),
-  nodeModules: path.resolve(__dirname, '../node_modules'),
-  src: path.resolve(__dirname, '../src'),
-  assets: path.resolve(__dirname, '../src/assets'),
-  dist: path.resolve(__dirname, '../dist'),
-  styles: path.resolve(__dirname, '../src/styles'),
-  localTemplate: path.resolve(__dirname, '../config/index.html'),
+  root,
+  src,
+  index: path.resolve(src, 'index.tsx'),
+  assets: path.resolve(src, 'assets'),
+  styles: path.resolve(src, 'styles'),
+  dist: path.resolve(root, 'dist'),
 };
 
-// for ant overrides
-
-const lessToJs = require('less-vars-to-js');
+// for ant style overrides
 const themeVariables = lessToJs(fs.readFileSync(path.join(PATHS.styles, './ant-theme-vars.less'), 'utf8'));
 
 module.exports = (env: any = {}) => {
   const PORT = env.port || 8080; // should match ./config/sfdc-cors-enable
   const resourceName = env.resource || 'app';
-  const isBuild = !!env.build;
-  const isLocal = env.local;
+  const isBuild = !!env.build; // build vs dev-server
+  const isProd = !!env.prod;   // for Prod ENV optimizations
 
-  console.log('isBuild:', isBuild, 'isLocal:', isLocal);
+  console.log(`Resource Name: ${resourceName} | isBuild: ${isBuild} | isProd: ${isProd}`);
 
-  const mode = isBuild ? 'production' : 'development';
+  const mode = isProd ? 'production' : 'development';
 
+  // add things here to put in the global namespace
   const GLOBAL_DEFINES: any = {
     'process.env': {
       NODE_ENV: JSON.stringify(mode),
     },
   };
 
-  const DEV_SERVER: webpackDevServer.Configuration = {
+  const devServer: webpackDevServer.Configuration = {
     historyApiFallback: true,
     overlay: true,
     port: PORT,
@@ -50,32 +49,25 @@ module.exports = (env: any = {}) => {
     disableHostCheck: true,
   };
 
-  // Setup variables for communications with Salesforce locally
-  if (isLocal) {
-    // get access token from sfdx
-    const child_process = require('child_process');
-    const orgInfo = JSON.parse(child_process.execSync('sfdx force:org:display --json').toString('utf8'));
-    console.log(`Running on ${orgInfo.result.instanceUrl} as ${orgInfo.result.username}`);
-    GLOBAL_DEFINES.__ACCESSTOKEN__ = JSON.stringify(orgInfo.result.accessToken);
-    GLOBAL_DEFINES.__RESTHOST__ = JSON.stringify(orgInfo.result.instanceUrl);
-  }
-
   const config: webpack.Configuration = {
     mode,
     cache: true,
-    devtool: isBuild ? 'source-map' : 'eval-source-map',
-    devServer: DEV_SERVER,
+    devtool: isBuild ? 'source-map' : 'source-map',
+    devServer,
     context: PATHS.root,
     entry: {
       app: [
         'babel-polyfill',
-        './src/index.tsx',
+        PATHS.index,
       ],
     },
     output: {
       path: PATHS.dist,
       filename: '[name].js',
-      publicPath: (isBuild ? `/resource/${resourceName}/dist/` : isLocal ? '/' : `https://localhost:${PORT}/`), // setup for HMR when hosted with salesforce
+      publicPath: (
+        isBuild ? `/resource/${resourceName}/dist/`
+        : `https://localhost:${PORT}/` // setup for HMR when hosted with salesforce
+      ),
     },
     optimization: {
       splitChunks: {
@@ -98,6 +90,7 @@ module.exports = (env: any = {}) => {
     // externals: {
     // },
 
+    /*** LOADERS ***/
     module: {
       rules: [
         // typescript
@@ -106,6 +99,7 @@ module.exports = (env: any = {}) => {
           test: /\.(ts|js)x?$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
+          options: require('./babelrc.json'),
         },
         // css
         {
@@ -164,18 +158,16 @@ module.exports = (env: any = {}) => {
       ],
     },
 
+    /*** PLUGIN ***/
     plugins: [
       ...[
         new webpack.DefinePlugin(GLOBAL_DEFINES),
       ],
       ...(!isBuild ? [
-        new DashboardPlugin(),
         new webpack.NamedModulesPlugin(),
       ] : []),
-      ...(isLocal ? [
-        new HtmlWebpackPlugin({
-          template: PATHS.localTemplate,
-        }),
+      ...(isProd ? [
+        // put production optimization plugins here
       ] : []),
       ...(env.analyze ? [
         new BundleAnalyzerPlugin(),

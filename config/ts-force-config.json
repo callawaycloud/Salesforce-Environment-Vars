@@ -1,7 +1,13 @@
 {
+  "$schema": "https://raw.githubusercontent.com/ChuckJonas/ts-force/master/ts-force-gen/ts-force-config.schema.json",
   "auth": {
     "username": "scratch"
   },
-  "sObjects": ["ENV_Var__mdt"],
+  "sObjects": [
+    {
+      "apiName": "ENV_Var__mdt",
+      "className": "EnvVarRecord"
+    }
+  ],
   "outPath": "./src/generated"
 }
