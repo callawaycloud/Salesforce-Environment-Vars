@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/ChuckJonas/ts-force/master/ts-force-gen/ts-force-config.schema.json",
   "auth": {
-    "username": "scratch"
+    "username": "envvars-scratch"
   },
   "sObjects": [
     {
@@ -9,5 +9,5 @@
       "className": "EnvVarRecord"
     }
   ],
-  "outPath": "./src/generated"
+  "outPath": "./app/generated"
 }

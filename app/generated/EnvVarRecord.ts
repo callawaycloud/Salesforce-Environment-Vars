@@ -41,6 +41,11 @@ export class EnvVarRecord extends RestObject {
      */
     @sField({ apiName: 'Value__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Value', externalId: false })
     public readonly value: string;
+    /**
+     * A copy of the first 255 characters of the value.  Allows use in formula!
+     */
+    @sField({ apiName: 'Val__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Val', externalId: false })
+    public readonly val: string;
 
     constructor(fields?: EnvVarRecordFields, client?: Rest) {
         super('ENV_Var__mdt', client);
@@ -55,6 +60,7 @@ export class EnvVarRecord extends RestObject {
         this.group = void 0;
         this.notes = void 0;
         this.value = void 0;
+        this.val = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }

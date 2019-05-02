@@ -30,6 +30,10 @@
                 <behavior>Edit</behavior>
                 <field>Notes__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Val__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

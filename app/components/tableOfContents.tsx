@@ -44,7 +44,7 @@ export class TableOfContents extends React.Component<TableOfContentsProps, Table
 
     const groupItems = Object.keys(itemsByGroup).sort().map((key) => {
 
-      const items = itemsByGroup[key].sort((a, b)  => a.key.localeCompare(b.key)).map((item) => {
+      const items = itemsByGroup[key].sort((a, b)  => (a.key || '').localeCompare((b.key || ''))).map((item) => {
         return (
           <div key={key}>
             <Typography.Title level={4} copyable={true}>

@@ -60,6 +60,18 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
       valueStyle.color = 'red';
     }
 
+    let tip: string | JSX.Element = this.props.item.notes;
+    if (this.props.item.value.length > 255) {
+      tip = (
+        <div>
+          {tip}
+          <div >
+            <Icon style={{color: 'red'}} type='warning' /> Length Exceeds 255 characters!  The entire value cannot be used in a formula.
+          </div>
+        </div>
+      );
+    }
+
     const canSave = this.props.item.key && this.props.item.hasChanges && (!typeError && !keyError);
     return (
       <div style={{ marginTop: 5 }} onDragOver={() => this.props.onDragOver(this.props.item)}>
@@ -79,7 +91,10 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
             disabled={!this.props.item.localOnly}
             value={this.props.item.key}
           />
-          <NotesModal item={this.props.item} onSaveNotes={(notes) => this.props.onUpdate(this.props.item, 'notes', notes)} />
+          <NotesModal
+            item={this.props.item}
+            onSaveNotes={(notes) => this.props.onUpdate(this.props.item, 'notes', notes)}
+          />
           <Select
             placeholder={'Data Type'}
             onChange={(e) => { this.props.onUpdate(this.props.item, 'dataType', e); }}
@@ -93,7 +108,7 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
             <Option key='String[]'>String[]</Option>
             <Option key='Map<String,String>'>{'Map<String,String>'}</Option>
           </Select>
-          <Tooltip title={this.props.item.notes}>
+          <Tooltip overlayStyle={{width: 300}} title={tip}>
             <TextArea
               placeholder='Value'
               style={valueStyle}

@@ -131,12 +131,13 @@ class App extends React.Component<{}, AppState> {
   }
 
   private addNew = () => {
-    console.log(this.state.groups);
     const vars = [...this.state.vars];
     vars.push({
       dataType: 'String',
       localOnly: true,
       group: '',
+      notes: '',
+      value: '',
     });
     this.setState({ vars });
   }
@@ -179,11 +180,13 @@ class App extends React.Component<{}, AppState> {
     const index = this.state.vars.findIndex((v) => v === item);
 
     // tslint:disable-next-line: no-object-literal-type-assertion
-    const payload = {
+    const val = item.value.slice(0, Math.min(255, item.value.length));
+    const payload: jsforce.MetadataInfo = {
       fullName: `${ENV_PREFIX}.${item.key}`,
       label: item.key,
       values: [
         { field: EnvVarRecord.FIELDS['value'].apiName, value: item.value },
+        { field: EnvVarRecord.FIELDS['val'].apiName, value:  val},
         { field: EnvVarRecord.FIELDS['datatype'].apiName, value: item.dataType },
         { field: EnvVarRecord.FIELDS['group'].apiName, value: item.group },
         { field: EnvVarRecord.FIELDS['notes'].apiName, value: item.notes },
@@ -230,7 +233,6 @@ class App extends React.Component<{}, AppState> {
   // === RENDER ===
 
   public render() {
-    console.log(this.state.groups);
     const vars = this.filterVars();
 
     const groupVars: {[key: string]: JSX.Element[]} = {};
