@@ -4,6 +4,5 @@
     <active>true</active>
     <description>Ensure that the Val__c field matches the first 255 characters of the long text val</description>
     <errorConditionFormula>LEFT( Value__c , 255) != Val__c</errorConditionFormula>
-    <errorDisplayField>Val__c</errorDisplayField>
     <errorMessage>Val__c must match the first 255 characters of Value__c</errorMessage>
 </ValidationRule>
