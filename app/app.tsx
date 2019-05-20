@@ -1,28 +1,26 @@
-import { Card, Button, message, Input, Divider } from 'antd';
+import { Button, Card, Divider, Input, message, Spin } from 'antd';
 import { hot } from 'react-hot-loader'; // needs to be before react!
 import * as React from 'react';
-import { EnvVarRecord } from '@src/generated';
-import * as jsforce from 'jsforce';
-import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
-import { EnvVarItem } from './components/EnvItem';
-import { EnvVar, DataType, MetadataResult } from './types';
 import { EnvGroup } from './components/EnvGroup';
+import { EnvVarItem } from './components/EnvItem/EnvItem';
 import { TableOfContents } from './components/tableOfContents';
-
-const ENV_PREFIX = EnvVarRecord.API_NAME.replace('__mdt', '');
+import { MetadataService } from './lib/metadataService';
+import { EnvVar } from './types';
 
 interface AppState {
   vars: EnvVar[];
   groups: string[];
   filter?: string;
+  loading: boolean;
 }
 
 class App extends React.Component<{}, AppState> {
-  private mdapi: jsforce.Metadata;
+  private mdapi: MetadataService;
   private draggedItem: EnvVar;
   constructor(props: any) {
     super(props);
     this.state = {
+      loading: true,
       vars: [],
       groups: [''],
     };
@@ -30,39 +28,20 @@ class App extends React.Component<{}, AppState> {
 
   // RETRIEVE METADATA
   public async componentDidMount() {
-    const conn = new jsforce.Connection({
-      accessToken: DEFAULT_CONFIG.accessToken,
-    });
-    this.mdapi = conn.metadata;
-    const varsRecords = await EnvVarRecord.retrieve((fields) => {
-      return {
-        select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes'),
-      };
-    });
-    if (varsRecords.length > 0) {
-      const groups = varsRecords.reduce((groups, vRec) => {
-        const group = vRec.group || '';
-        if (!groups.includes(group)) {
-          groups.push(group);
-        }
-        return groups;
-      }, []);
-      const vars = varsRecords.map<EnvVar>((vRec) => {
-        const {developerName: key, value, datatype, group, notes } = vRec;
-        const dataType = datatype as DataType;
-        return {
-          key,
-          value,
-          dataType,
-          group: group || '',
-          notes,
-        };
-      });
-      if (!groups.includes('')) {
-        groups.push('');
+
+    this.mdapi = new MetadataService();
+    let vars = await this.mdapi.retrieveEnvVars();
+    const groups = vars.reduce((groups, v) => {
+      const group = v.group;
+      if (!groups.includes(group)) {
+        groups.push(group);
       }
-      this.setState({ vars, groups });
+      return groups;
+    }, []);
+    if (!groups.includes('')) {
+      groups.push('');
     }
+    this.setState({ vars, groups, loading: false });
   }
 
   // Drag & Drop
@@ -107,18 +86,23 @@ class App extends React.Component<{}, AppState> {
     const vars = [...this.state.vars];
     vars[index] = newDraggedItem;
     const groups = [...this.state.groups];
-    this.setState({vars, groups});
+    this.setState({ vars, groups });
   }
 
   public newGroup = () => {
     const groups = [...this.state.groups];
     groups.push(undefined);
-    this.setState({groups});
+    this.setState({ groups });
   }
 
   public cancelNewGroup = () => {
     const groups = this.state.groups.filter((g) => g !== undefined);
-    this.setState({groups});
+    const vars: EnvVar[] = [...this.state.vars].filter(v => v.group !== undefined);
+    let groupVars = this.state.vars.filter(v => v.group === undefined)
+      groupVars.forEach(v => {
+        vars.push({ ...v, ...{ group: '' } });
+      });
+    this.setState({ groups, vars });
   }
 
   // === LOCAL STATE HANDLERS===
@@ -145,89 +129,62 @@ class App extends React.Component<{}, AppState> {
   // === DML HANDLERS ===
 
   private updateGroupName = async (oldName: string, newName: string) => {
-    const gIndex = this.state.groups.indexOf(oldName);
-    const groups = [...this.state.groups];
-    groups[gIndex] = newName;
+    this.setState({ loading: true }, async () => {
+      const gIndex = this.state.groups.indexOf(oldName);
+      const groups = [...this.state.groups];
+      groups[gIndex] = newName;
 
-    const vars: EnvVar[] = [];
-    for (const v of this.state.vars) {
-      if (v.group === oldName) {
-        const payload = {
-          fullName: `${ENV_PREFIX}.${v.key}`,
-          label: v.key,
-          values: [
-            { field: EnvVarRecord.FIELDS['group'].apiName, value: newName },
-          ],
-        } as jsforce.MetadataInfo;
-        const result = await this.mdapi.update('CustomMetadata', payload) as any as MetadataResult;
-        if (!result.success) {
-          console.log('Failed to change group', v, newName);
-        }
-        vars.push({...v, ...{group: newName}});
+      const vars: EnvVar[] = [...this.state.vars].filter(v => v.group !== oldName);
+      let groupVars = this.state.vars.filter(v => v.group === oldName)
+      groupVars.forEach(v => {
+        vars.push({ ...v, ...{ group: newName } });
+      });
+      try {
+        await this.mdapi.updateGroup(groupVars, newName);
+      } catch (e) {
+        console.log('Failed to change group', newName);
       }
-      vars.push(v);
-    }
 
-    // make sure we always have an empty group
-    if (!groups.includes('')) {
-      groups.push('');
-    }
-    this.setState({vars, groups});
+      // make sure we always have an empty group
+      if (!groups.includes('')) {
+        groups.push('');
+      }
+      this.setState({ vars, groups, loading: false });
+    });
   }
 
   private saveVar = async (item: EnvVar) => {
+    this.setState({ loading: true }, async () => {
+      const index = this.state.vars.findIndex((v) => v === item);
+      let newVar: Partial<EnvVar>;
+      try {
+        await this.mdapi.saveEnvVars(item);
+        newVar = { hasChanges: false, localOnly: false, dmlError: false };
+      } catch (e) {
+        newVar = { dmlError: true };
+        message.error(e);
+      }
 
-    const index = this.state.vars.findIndex((v) => v === item);
-
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    const val = item.value.slice(0, Math.min(255, item.value.length));
-    const payload: jsforce.MetadataInfo = {
-      fullName: `${ENV_PREFIX}.${item.key}`,
-      label: item.key,
-      values: [
-        { field: EnvVarRecord.FIELDS['value'].apiName, value: item.value },
-        { field: EnvVarRecord.FIELDS['val'].apiName, value:  val},
-        { field: EnvVarRecord.FIELDS['datatype'].apiName, value: item.dataType },
-        { field: EnvVarRecord.FIELDS['group'].apiName, value: item.group },
-        { field: EnvVarRecord.FIELDS['notes'].apiName, value: item.notes },
-      ],
-    } as jsforce.MetadataInfo;
-
-    let result: MetadataResult;
-    if (item.localOnly) {
-      result = await this.mdapi.create('CustomMetadata', payload) as any as MetadataResult;
-    } else {
-      result = await this.mdapi.update('CustomMetadata', payload) as any as MetadataResult;
-    }
-    let newVar: Partial<EnvVar>;
-    if (result.success) {
-      newVar = { hasChanges: false, localOnly: false, dmlError: false };
-    } else {
-      newVar = { dmlError: true };
-      message.error(result.errors.message);
-    }
-
-    const vars = [...this.state.vars];
-    vars[index] = { ...item, ...newVar };
-    this.setState({ vars });
+      const vars = [...this.state.vars];
+      vars[index] = { ...item, ...newVar };
+      this.setState({ vars, loading: false });
+    })
   }
 
   private removeVar = async (item: EnvVar) => {
-    const index = this.state.vars.findIndex((v) => v === item);
+    this.setState({ loading: true }, async () => {
+      const index = this.state.vars.findIndex((v) => v === item);
 
-    if (!item.localOnly) {
-      const result = await this.mdapi.delete(
-        'CustomMetadata',
-        `${ENV_PREFIX}.${item.key}`,
-      ) as any as MetadataResult;
-
-      if (!result.success) {
-        message.error(result.errors.message);
-        return;
+      if (!item.localOnly) {
+        try {
+          await this.mdapi.deleteEnvVar(item);
+        } catch (e) {
+          message.error(e);
+        }
       }
-    }
-    const vars = this.state.vars.filter((_, i) => i !== index);
-    this.setState({ vars });
+      const vars = this.state.vars.filter((_, i) => i !== index);
+      this.setState({ vars, loading: false });
+    })
   }
 
   // === RENDER ===
@@ -235,7 +192,7 @@ class App extends React.Component<{}, AppState> {
   public render() {
     const vars = this.filterVars();
 
-    const groupVars: {[key: string]: JSX.Element[]} = {};
+    const groupVars: { [key: string]: JSX.Element[] } = {};
     for (const group of this.state.groups) {
       const gVars = vars.filter((v) => v.group === group);
 
@@ -275,27 +232,30 @@ class App extends React.Component<{}, AppState> {
 
     const toc = (
       <TableOfContents
-        onTitleClick={(key) => this.setState({filter: key})}
+        onTitleClick={(key) => this.setState({ filter: key })}
         vars={this.state.vars}
       />
     );
 
     return (
+
       <Card
         title='Enviroment Variables'
         extra={toc}
       >
-        <Input.Search
-          placeholder='Search Keys or Values'
-          value={this.state.filter}
-          onChange={(e) => this.setState({filter: e.target.value})}
-          allowClear={true}
-          style={{width: '35%'}}
-        />
-        <Button style={{ marginLeft: 10 }} icon='folder' onClick={() => this.newGroup()}>Add Group</Button>
-        <Divider dashed={true} />
-        {groupElements}
-        <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
+        <Spin spinning={this.state.loading} >
+          <Input.Search
+            placeholder='Search Keys or Values'
+            value={this.state.filter}
+            onChange={(e) => this.setState({ filter: e.target.value })}
+            allowClear={true}
+            style={{ width: '35%' }}
+          />
+          <Button style={{ marginLeft: 10 }} icon='folder' onClick={() => this.newGroup()}>Add Group</Button>
+          <Divider dashed={true} />
+          {groupElements}
+          <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
+        </Spin>
       </Card>
     );
   }

@@ -42,9 +42,10 @@ export class EnvGroup extends React.Component<EnvGroupProps, EnvGroupState> {
       if (this.state.name && this.state.name.length) {
         btns.push(<Button key='save' onClick={this.onChangeName} type='primary' icon='save' />);
       }
-      if (this.props.group !== undefined) {
-        btns.push(<Button key='undo' onClick={() => this.setState({edit: false})} type='dashed' icon='undo' />);
-      }
+    }
+
+    if (this.props.group !== undefined) {
+      btns.push(<Button key='undo' onClick={() => this.setState({edit: false})} type='dashed' icon='undo' />);
     }
 
     if (this.props.group === undefined) {
@@ -59,7 +60,6 @@ export class EnvGroup extends React.Component<EnvGroupProps, EnvGroupState> {
           autoFocus={true}
           placeholder='Update Name'
           value={this.state.name}
-          onBlur={() => this.setState({edit: false})}
           onChange={(e) => this.setState({name: e.target.value})}
         />
           {btns}

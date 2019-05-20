@@ -70,7 +70,7 @@ https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-96
 
 ### Create ENV VARS
 
-If UI was installed, navigate to `/apex/env_vars` and setup your Environment Variables.  Otherwise, just manage like any other CustomMetadata.
+If UI was installed, navigate to `/apex/env_vars` and setup your Environment Variables.  Otherwise, just manage like any other Custom Metadata (it will be up to you to ensure the types are correct).
 
 
 ### Contributing/Modifying
