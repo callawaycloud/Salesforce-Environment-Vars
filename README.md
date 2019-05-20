@@ -53,7 +53,7 @@ https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-96
 
 ## Usage
 
-### install in org
+### Install in org
 
 [Use SFDX to deploy to org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_build_mdapi_deploy.htm)
 
@@ -63,7 +63,7 @@ https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-96
 2. `sfdx force:source:convert -d deploy/`
 3. `sfdx force:mdapi:deploy -d deploy/ -u "YOUR_USERNAME_HERE" -l RunSpecifiedTests -r EnvTests`
 
-**NOTE:** This application comes with a custom user interface for easier management of the ENV Vars. If you'd prefer not to use it, delete the following before deploying:
+**NOTE:** This application comes with a custom user interface for easier management of the ENV Vars.  It is HIGHLY RECOMMENED, but not required. If you'd prefer not to use it, delete the following before deploying:
 
 - `force-app/main/default/pages`
 - `force-app/main/default/staticresources`
@@ -71,24 +71,6 @@ https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-96
 ### Create ENV VARS
 
 If UI was installed, navigate to `/apex/env_vars` and setup your Environment Variables.  Otherwise, just manage like any other CustomMetadata.
-
-### Use in apex
-
-Use `Env.get()` to access by passing in the `DeveloperName`:
-
-``` java
-// cast to datatype
-Integer retries = (Integer) Env.get('Account_Sync_Retries');
-String[] types = (String[]) Env.get('Status_Types');
-```
-
-### Use in Formula
-
-`$CustomMetadata.ENV_Var__mdt.Account_Sync_Retries.Val__c`
-
-**TIP**: You can copy these via the `Actions wrench`:
-
-
 
 
 ### Contributing/Modifying
