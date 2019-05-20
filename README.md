@@ -18,18 +18,18 @@ $CustomMetadata.ENV_Var__mdt.FIELD_MAP.Val__c
 
 ## Features
 
-- Works in both formulas<sup>1</sup> & apex
-- copy as apex/formula code to clipboard
+### Works in both formulas<sup>1</sup> & apex
+###copy as apex/formula code to clipboard
 ![copy code](https://user-images.githubusercontent.com/5217568/58001336-6636dd00-7a98-11e9-875b-a468d42633cc.png)
-- "typechecking" to prevent user input errors
+### "typechecking" to prevent user input errors
 ![copy code](https://user-images.githubusercontent.com/5217568/58004297-2ecc2e80-7aa0-11e9-9ca9-c0e2e5d4a0da.png)
-- auto-formatting of JSON types
-- Ability to group "VARS"
-- quick find
-- ability to add notes
+### auto-formatting of JSON types
+### Ability to group "VARS"
+### quick find
+### ability to add notes
 ![notes](
 https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-9641-5ef774ea603f.png)
-- Table of Contents / Glossary Index
+### Table of Contents / Glossary Index
 
 <sup>1</sup> When using in formulas, you only can access the first 255 characters
 
