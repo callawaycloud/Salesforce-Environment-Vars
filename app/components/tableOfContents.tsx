@@ -72,7 +72,7 @@ export class TableOfContents extends React.Component<TableOfContentsProps, Table
 
     return(
       <     div >
-        <Tooltip title='Click to see a summary of all settings'>
+        <Tooltip title='Click to see a summary of all settings' placement='bottomLeft'>
           <Button
             icon='read'
             onClick={this.openModal}

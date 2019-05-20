@@ -59,6 +59,7 @@ export class EnvGroup extends React.Component<EnvGroupProps, EnvGroupState> {
           autoFocus={true}
           placeholder='Update Name'
           value={this.state.name}
+          onBlur={() => this.setState({edit: false})}
           onChange={(e) => this.setState({name: e.target.value})}
         />
           {btns}

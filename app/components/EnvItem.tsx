@@ -42,6 +42,17 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
     this.setState({actionsVisible: false});
   }
 
+  private editFinished = () => {
+    let item = this.props.item;
+    let val = item.value;
+    if(this.validateType(item.dataType, item.value) && item.value &&
+      (item.dataType === 'Map<String,String>' || item.dataType === 'String[]')){
+        val = JSON.stringify(JSON.parse(val), null, 1)
+        this.props.onUpdate(item, 'value', val);
+    }
+    this.setState({editing: false});
+  }
+
   public render() {
     let { item } = this.props;
 
@@ -91,12 +102,13 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
         placeholder='Value'
         style={valueStyle}
         value={item.value}
-        onBlur={() => this.setState({ editing: false })}
+        onBlur={this.editFinished}
         onChange={(e) => { this.props.onUpdate(item, 'value', e.target.value); }}
       />
     ) :
     <Input
-      style={valueStyle} value={item.value}
+      style={valueStyle}
+      value={item.value}
       placeholder='Value'
       onFocus={() => this.setState({ editing: true })}
     />

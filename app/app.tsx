@@ -286,16 +286,16 @@ class App extends React.Component<{}, AppState> {
         extra={toc}
       >
         <Input.Search
-          placeholder='Filter Env Vars'
+          placeholder='Search Keys or Values'
           value={this.state.filter}
           onChange={(e) => this.setState({filter: e.target.value})}
           allowClear={true}
           style={{width: '35%'}}
         />
+        <Button style={{ marginLeft: 10 }} icon='folder' onClick={() => this.newGroup()}>Add Group</Button>
         <Divider dashed={true} />
         {groupElements}
         <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
-        <Button style={{ marginTop: 15 }} type='dashed' icon='group' onClick={() => this.newGroup()}>Add Group</Button>
       </Card>
     );
   }
@@ -304,7 +304,10 @@ class App extends React.Component<{}, AppState> {
     let vars = this.state.vars;
     if (this.state.filter) {
       const filter = this.state.filter.toLocaleLowerCase();
-      vars = vars.filter((v) => v.key && v.key.toLocaleLowerCase().includes(filter));
+      vars = vars.filter((v) => {
+        return v.key && v.key.toLocaleLowerCase().includes(filter)
+          || v.value && v.value.toLocaleLowerCase().includes(filter);
+      })
     }
     return vars;
   }
