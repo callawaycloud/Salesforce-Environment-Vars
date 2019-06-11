@@ -1,9 +1,10 @@
 # Salesforce Environment Variables
 
+NOTE: This package will soon be released as an unlocked namespace package.  I've you have already installed and want to stay up-to-sync with the latest improvements, there will be a manual migration process!
+
 A simple library for using Custom Metadata to manage simple Key/Value Environment variables + Admin UI.
 
 ![UI](https://user-images.githubusercontent.com/5217568/58003863-f841e400-7a9e-11e9-8e7a-27b710606086.png)
-
 
 
 *idea inspired by Ralph Callaway's work*
