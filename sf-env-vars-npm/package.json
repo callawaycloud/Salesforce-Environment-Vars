@@ -1,0 +1,18 @@
+{
+  "name": "sf-env-vars",
+  "version": "1.0.1",
+  "description": "Simple node library for accessing Salesforce-Env-Vars along side ts-force applications",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepublish": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "3.5.2"
+  },
+  "peerDependencies": {
+    "ts-force": "2.x"
+  },
+  "author": "Charles Jonas",
+  "license": "ISC"
+}

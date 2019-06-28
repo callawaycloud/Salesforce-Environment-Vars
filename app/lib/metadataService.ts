@@ -2,6 +2,7 @@ import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
 import { EnvVarRecord } from '@src/generated';
 import { EnvVar, DataType, MetadataResult } from '@src/types';
 import * as jsforce from 'jsforce';
+import { createSecret } from './secretService';
 
 const ENV_PREFIX = EnvVarRecord.API_NAME.replace('__mdt', '');
 const CUSTOM_METADATA = 'CustomMetadata';
@@ -18,17 +19,18 @@ export class MetadataService {
   public retrieveEnvVars = async (): Promise<EnvVar[]> => {
     const varsRecords = await EnvVarRecord.retrieve((fields) => {
       return {
-        select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes'),
+        select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes', 'secret'),
       };
     });
     if (varsRecords.length > 0) {
       const vars = varsRecords.map<EnvVar>((vRec) => {
-        const { developerName: key, value, datatype, group, notes } = vRec;
+        const { developerName: key, value, datatype, group, notes, secret } = vRec;
         const dataType = datatype as DataType;
         return {
           key,
           value,
           dataType,
+          secret,
           group: group || '',
           notes: notes || '',
         };
@@ -56,17 +58,23 @@ export class MetadataService {
   }
 
   public saveEnvVars = async (item: EnvVar) => {
+    let value = item.value;
+    if(item.secret){
+      value = await createSecret(item.value);
+    }
     // tslint:disable-next-line: no-object-literal-type-assertion
-    const val = item.value.slice(0, Math.min(255, item.value.length));
+    let val = value.slice(0, Math.min(255, value.length));
+
     const payload: jsforce.MetadataInfo = {
       fullName: `${ENV_PREFIX}.${item.key}`,
       label: item.key,
       values: [
-        { field: EnvVarRecord.FIELDS['value'].apiName, value: item.value },
+        { field: EnvVarRecord.FIELDS['value'].apiName, value: value },
         { field: EnvVarRecord.FIELDS['val'].apiName, value: val },
         { field: EnvVarRecord.FIELDS['datatype'].apiName, value: item.dataType },
         { field: EnvVarRecord.FIELDS['group'].apiName, value: item.group },
         { field: EnvVarRecord.FIELDS['notes'].apiName, value: item.notes },
+        { field: EnvVarRecord.FIELDS['secret'].apiName, value: item.secret },
       ],
     } as jsforce.MetadataInfo;
 

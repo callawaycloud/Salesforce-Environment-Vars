@@ -13,3 +13,8 @@ package.xml
 
 **/profiles
 **/CustomMetadata
+
+**/*SessionSetting*
+**/*PasswordPolicy*
+*SessionSetting*
+*PasswordPolicy*

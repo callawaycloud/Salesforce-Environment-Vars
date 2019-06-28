@@ -1,12 +1,12 @@
-import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps } from 'ts-force';
-import './';
+import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst } from "ts-force";
+import "./";
 
-export type ENVVarmdtFields = Partial<FieldProps<EnvVarRecord>>;
+export type EnvVarFields = Partial<FieldProps<EnvVar>>;
 
 /**
- * Generated class for ENV_Var__mdt
+ * Generated class for Env_Var__mdt
  */
-export class EnvVarRecord extends RestObject {
+export class EnvVar extends RestObject {
     @sField({ apiName: 'Id', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.ID, salesforceLabel: 'Custom Metadata Record ID', externalId: false })
     public readonly id: string;
     @sField({ apiName: 'DeveloperName', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Custom Metadata Record Name', externalId: false })
@@ -14,7 +14,7 @@ export class EnvVarRecord extends RestObject {
     @sField({ apiName: 'MasterLabel', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Label', externalId: false })
     public readonly masterLabel: string;
     @sField({ apiName: 'Language', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Master Language', externalId: false })
-    public readonly language: string;
+    public readonly language: PicklistConst<typeof EnvVar.PICKLIST.language>;
     @sField({ apiName: 'NamespacePrefix', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Namespace Prefix', externalId: false })
     public readonly namespacePrefix: string;
     @sField({ apiName: 'Label', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.STRING, salesforceLabel: 'Label', externalId: false })
@@ -25,7 +25,7 @@ export class EnvVarRecord extends RestObject {
      * The datatype of this ENV var
      */
     @sField({ apiName: 'Datatype__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.PICKLIST, salesforceLabel: 'Datatype', externalId: false })
-    public readonly datatype: string;
+    public readonly datatype: PicklistConst<typeof EnvVar.PICKLIST.datatype>;
     /**
      * The value of this var
      */
@@ -41,9 +41,11 @@ export class EnvVarRecord extends RestObject {
      */
     @sField({ apiName: 'Notes__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Notes', externalId: false })
     public readonly notes: string;
+    @sField({ apiName: 'Val__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Val', externalId: false })
+    public readonly val: string;
 
-    constructor(fields?: ENVVarmdtFields, client?: Rest) {
-        super('ENV_Var__mdt', client);
+    constructor(fields?: EnvVarFields, restInstance?: Rest) {
+        super('Env_Var__mdt', restInstance);
         this.id = void 0;
         this.developerName = void 0;
         this.masterLabel = void 0;
@@ -55,26 +57,58 @@ export class EnvVarRecord extends RestObject {
         this.value = void 0;
         this.group = void 0;
         this.notes = void 0;
+        this.val = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
-    public static API_NAME: 'ENV_Var__mdt' = 'ENV_Var__mdt';
-    public readonly _TYPE_: 'ENV_Var__mdt' = 'ENV_Var__mdt';
-    private static _fields: { [P in keyof FieldProps<EnvVarRecord>]: SFieldProperties; };
+    public static API_NAME: 'Env_Var__mdt' = 'Env_Var__mdt';
+    public readonly _TYPE_: 'Env_Var__mdt' = 'Env_Var__mdt';
+    private static _fields: { [P in keyof FieldProps<EnvVar>]: SFieldProperties; };
 
     public static get FIELDS() {
-        return this._fields = this._fields ? this._fields : EnvVarRecord.getPropertiesMeta<FieldProps<EnvVarRecord>, EnvVarRecord>(EnvVarRecord);
+        return this._fields = this._fields ? this._fields : EnvVar.getPropertiesMeta<FieldProps<EnvVar>, EnvVar>(EnvVar)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<EnvVarRecord>) => SOQLQueryParams) | string): Promise<EnvVarRecord[]> {
+    public static async retrieve(qryParam: ((fields: FieldResolver<EnvVar>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<EnvVar[]> {
 
-        const qry = typeof qryParam === 'function' ? buildQuery(EnvVarRecord, qryParam) : qryParam;
-        return RestObject.query<EnvVarRecord>(EnvVarRecord, qry);
+        let qry = typeof qryParam === 'function' ? buildQuery(EnvVar, qryParam) : qryParam;
+        return await RestObject.query<EnvVar>(EnvVar, qry, restInstance);
 
     }
 
-    public static fromSFObject(sob: SObject): EnvVarRecord {
-        return new EnvVarRecord().mapFromQuery(sob);
+    public static fromSFObject(sob: SObject): EnvVar {
+        return new EnvVar().mapFromQuery(sob);
     }
+
+    public static readonly PICKLIST = {
+        language: {
+            EN_US: "en_US",
+            DE: "de",
+            ES: "es",
+            FR: "fr",
+            IT: "it",
+            JA: "ja",
+            SV: "sv",
+            KO: "ko",
+            ZH_TW: "zh_TW",
+            ZH_CN: "zh_CN",
+            PT_BR: "pt_BR",
+            NL_NL: "nl_NL",
+            DA: "da",
+            TH: "th",
+            FI: "fi",
+            RU: "ru",
+            ES_MX: "es_MX",
+            NO: "no"
+        },
+        datatype: {
+            STRING: "String",
+            INTEGER: "Integer",
+            BOOLEAN: "Boolean",
+            DECIMAL: "Decimal",
+            STRING_dup: "String[]",
+            MAPSTRINGSTRING: "Map<String,String>"
+        }
+    } as const;
 }

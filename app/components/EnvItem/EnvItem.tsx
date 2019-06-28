@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Input, Button, Icon, Tooltip, Popover, message } from 'antd';
+import { Input, Button, Icon, Tooltip, Popover, message, Switch, Divider } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { EnvVar, DataType } from '@src/types';
 import { NotesModal } from './NotesModal';
@@ -13,7 +13,7 @@ const InputGroup = Input.Group;
 export interface EnvVarItemProps {
   item: EnvVar;
   onRemove: (item: EnvVar) => void;
-  onUpdate: (item: EnvVar, field: keyof EnvVar, value: string) => void;
+  onUpdate: (item: EnvVar, field: keyof EnvVar, value: string|boolean) => void;
   onSave: (item: EnvVar) => void;
   onDragStart: (e: any, item: EnvVar) => void;
   onDragOver: (draggedOver: EnvVar) => void;
@@ -72,6 +72,16 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
         onVisibleChange={(v) => { this.setState({ actionsVisible: v }) }}
         visible={this.state.actionsVisible}
       >
+        <Tooltip title='This cannot be changed or viewed after saving.  WARNING: Anyone with Apex permission will be able to view these values'>
+          Secret: <Switch
+            disabled={!item.localOnly}
+            checked={item.secret}
+            onChange={(e) => this.props.onUpdate(this.props.item, 'secret', e)}
+            checkedChildren={<Icon type="eye-invisible" />}
+            unCheckedChildren={<Icon type="eye" />}
+          />
+        </Tooltip>
+        <Divider style={{margin:'15px 0px'}} />
         <NotesModal
           item={item}
           onSaveNotes={this.onNotesSave}
@@ -86,6 +96,7 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
         <CopyCode
           text="Copy Formula"
           icon='number'
+          disabled={this.props.item.secret}
           onCopy={this.copySuccess}
           codeFunc={getFormula}
           item={item}

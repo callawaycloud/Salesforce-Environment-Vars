@@ -33,6 +33,7 @@ interface CopyCodeProps {
   codeFunc: (item: EnvVar) => string;
   icon: 'code' | 'number'
   text: string
+  disabled?: boolean;
 }
 
 export const CopyCode: React.FunctionComponent<CopyCodeProps> = (props) => {
@@ -41,7 +42,7 @@ export const CopyCode: React.FunctionComponent<CopyCodeProps> = (props) => {
     navigator.clipboard.writeText(apex);
     props.onCopy();
   }
-  return <Button icon={props.icon} onClick={copy}>{props.text}</Button>
+  return <Button disabled={props.disabled} icon={props.icon} onClick={copy}>{props.text}</Button>
 }
 
 

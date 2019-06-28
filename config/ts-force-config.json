@@ -1,13 +1,22 @@
 {
   "$schema": "https://raw.githubusercontent.com/ChuckJonas/ts-force/master/ts-force-gen/ts-force-config.schema.json",
   "auth": {
-    "username": "envvars-scratch"
+    "username": "SalesforceEnvironmentVars"
   },
   "sObjects": [
     {
-      "apiName": "ENV_Var__mdt",
+      "apiName": "VARS__ENV__mdt",
+      "fieldMappings": [
+        {"apiName": "VARS__Datatype__c", "propName": "datatype"},
+        {"apiName": "VARS__Group__c", "propName": "group"},
+        {"apiName": "VARS__Notes__c", "propName": "notes"},
+        {"apiName": "VARS__Val__c", "propName": "val"},
+        {"apiName": "VARS__Value__c", "propName": "value"},
+        {"apiName": "VARS__Secret__c", "propName": "secret"}
+      ],
       "className": "EnvVarRecord"
-    }
+    },
+    "ApexClass"
   ],
   "outPath": "./app/generated"
 }

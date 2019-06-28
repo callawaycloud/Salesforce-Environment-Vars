@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Input, message, Spin } from 'antd';
+import { Button, Card, Divider, Input, message, Spin, Switch } from 'antd';
 import { hot } from 'react-hot-loader'; // needs to be before react!
 import * as React from 'react';
 import { EnvGroup } from './components/EnvGroup';
@@ -6,12 +6,15 @@ import { EnvVarItem } from './components/EnvItem/EnvItem';
 import { TableOfContents } from './components/tableOfContents';
 import { MetadataService } from './lib/metadataService';
 import { EnvVar } from './types';
+import { SecretsEnabled } from './components/secrets';
+import { getSecretsEnabled } from './lib/secretService';
 
 interface AppState {
   vars: EnvVar[];
   groups: string[];
   filter?: string;
   loading: boolean;
+  secretsEnabled: boolean;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -23,11 +26,13 @@ class App extends React.Component<{}, AppState> {
       loading: true,
       vars: [],
       groups: [''],
+      secretsEnabled: false
     };
   }
 
   // RETRIEVE METADATA
   public async componentDidMount() {
+    let secretsEnabled = await getSecretsEnabled();
 
     this.mdapi = new MetadataService();
     let vars = await this.mdapi.retrieveEnvVars();
@@ -41,7 +46,7 @@ class App extends React.Component<{}, AppState> {
     if (!groups.includes('')) {
       groups.push('');
     }
-    this.setState({ vars, groups, loading: false });
+    this.setState({ vars, groups, loading: false, secretsEnabled });
   }
 
   // Drag & Drop
@@ -119,6 +124,7 @@ class App extends React.Component<{}, AppState> {
     vars.push({
       dataType: 'String',
       localOnly: true,
+      secret: false,
       group: '',
       notes: '',
       value: '',
@@ -240,7 +246,7 @@ class App extends React.Component<{}, AppState> {
     return (
 
       <Card
-        title='Enviroment Variables'
+        title='Environment Variables'
         extra={toc}
       >
         <Spin spinning={this.state.loading} >
@@ -252,6 +258,7 @@ class App extends React.Component<{}, AppState> {
             style={{ width: '35%' }}
           />
           <Button style={{ marginLeft: 10 }} icon='folder' onClick={() => this.newGroup()}>Add Group</Button>
+          <SecretsEnabled style={{float:'right'}} enabled={this.state.secretsEnabled} />
           <Divider dashed={true} />
           {groupElements}
           <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>

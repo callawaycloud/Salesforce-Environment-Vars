@@ -13,6 +13,16 @@ interface EditorProps {
 }
 
 export const Editor: React.FunctionComponent<EditorProps> = (props) => {
+  const valueStyle: React.CSSProperties = { width: '40%' };
+
+  if(props.item.secret && !props.item.localOnly){
+    return (
+      <Input.Password style={valueStyle} value={props.item.value} visibilityToggle={false} />
+    )
+  }else if(props.item.secret && props.item.localOnly){
+      return <Input.Password placeholder='Value cannot be changed after saving!' style={valueStyle} value={props.item.value} onChange={(e)=>props.onUpdate(e.target.value)} />
+  }
+
   let tip: string | JSX.Element = props.item.notes;
   if (props.item.value.length > 255) {
     tip = (
@@ -25,7 +35,6 @@ export const Editor: React.FunctionComponent<EditorProps> = (props) => {
     );
   }
 
-  const valueStyle: React.CSSProperties = { width: '40%' };
   if (props.valueError) {
     valueStyle.color = 'red';
   }

@@ -1,6 +1,6 @@
 {
-  "name": "bad-ass-salesforce-stack",
-  "version": "0.2.0",
+  "name": "env-vars",
+  "version": "0.1.0",
   "description": "React, Redux, Typescript, antd, ts-force, sfdx starter",
   "author": "Charlie Jonas",
   "homepage": "https://github.com/ChuckJonas/bad-ass-salesforce-stack",
@@ -13,7 +13,7 @@
   "main": "dist/app.js",
   "config": {
     "resource": "ENVVars",
-    "package_path": "./force-app/main/default",
+    "package_path": "./env-vars/main/default",
     "port": 8080
   },
   "scripts": {
@@ -33,13 +33,10 @@
     "package-sfdc": "sfdx force:source:convert -d ./dist/sfdc-package",
     "build-dev": "npm run bundle-app-dev && npm run package-sfdc",
     "build-prod": "npm run bundle-app-prod && npm run package-sfdc",
-    "push-dev": "sfdx force:mdapi:deploy -u $npm_config_dev_alias -d ./dist/sfdc-package -w 10000",
     "push-scratch": "sfdx force:source:push -u $npm_config_scratch_alias",
-    "push-prod": "sfdx force:mdapi:deploy -u $npm_config_prod_alias -d ./dist/sfdc-package -w 10000",
-    "deploy-dev": "npm run build-dev && npm run push-dev",
-    "deploy-scratch": "npm run bundle-app-dev && npm run push-scratch",
-    "deploy-prod": "npm run build-prod && npm run push-prod",
     "generate-ts-force": "ts-force-gen -j ./config/ts-force-config.json",
+    "create-version": "npm run build-prod && sfdx force:package:version:create -p $npm_package_name -d force-app -x --wait 10 -v $npm_config_hub_alias",
+    "release": "sfdx force:package:version:promote -v $npm_config_hub_alias -p $npm_package_name@1.0.0-1 ",
     "test": "jest --no-cache --config ./config/jest.json",
     "test:update": "jest --no-cache --config jest.json -u",
     "reinstall": "rimraf node_modules dist && npm install"
@@ -51,7 +48,7 @@
     "jsforce": "^1.9.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "ts-force": "^2.2.3",
+    "ts-force": "^2.6.2",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
@@ -89,7 +86,7 @@
     "react-test-renderer": "^16.8.4",
     "rimraf": "^2.6.1",
     "style-loader": "^0.23.1",
-    "ts-force-gen": "^2.2.3",
+    "ts-force-gen": "^2.6.2",
     "ts-jest": "^24.0.0",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.8.0",

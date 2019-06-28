@@ -1,11 +1,11 @@
 import { DataType, EnvVar } from '@src/types';
 
 export const getApex = (item: EnvVar) => {
-  return `(${item.dataType}) ENV.get('${item.key}');`;
+  return `(${item.dataType}) VARS.ENV.get('${item.key}');`;
 };
 
 export const getFormula = (item: EnvVar) => {
-  return `$CustomMetadata.ENV_Var__mdt.${item.key}.Val__c`;
+  return `$CustomMetadata.VARS__ENV__mdt.${item.key}.Val__c`;
 };
 
 export const validateType = (dataType: DataType, value: string): Boolean => {

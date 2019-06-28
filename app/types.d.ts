@@ -1,4 +1,4 @@
-import { ENVVarmdtFields } from "./generated";
+import { EnvVarRecord } from "./generated";
 
 interface System {
   import<T = any>(module: string): Promise<T>
@@ -22,6 +22,7 @@ interface EnvVar {
   value?: string
   group?: string;
   notes?: string;
+  secret: boolean;
   hasChanges?: boolean;
   localOnly?: boolean;
   dmlError?: boolean;
