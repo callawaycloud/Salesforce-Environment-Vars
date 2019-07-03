@@ -1,11 +1,11 @@
-import {EnvVar} from './generated';
+import {EnvVarRecord} from './generated';
 
 type EnvValType = number | string | boolean | string[] | {[key: string]: string};
 
 export const load = async <T>(varsObject: { new(): T }): Promise<T> => {
 
   let result = new varsObject();
-  const envVars = await EnvVar.retrieve((fields) => (
+  const envVars = await EnvVarRecord.retrieve((fields) => (
     {
       select: [...fields.select('datatype', 'developerName', 'value')],
       where: [

@@ -50,7 +50,7 @@ for(ENV_Var__mdt vars : [SELECT
                               
     Metadata.CustomMetadataValue val = new Metadata.CustomMetadataValue();
     val.field = 'VARS__Val__c';
-    val.value = vars.Val__c;
+    val.value = vars.Value__c.substring(0,Math.min(255, vars.Value__c.length()));
     customMetadata.values.add(val);
                               
     Metadata.CustomMetadataValue value = new Metadata.CustomMetadataValue();

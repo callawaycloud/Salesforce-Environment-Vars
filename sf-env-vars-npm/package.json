@@ -1,6 +1,6 @@
 {
   "name": "sf-env-vars",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Simple node library for accessing Salesforce-Env-Vars along side ts-force applications",
   "main": "dist/index.js",
   "scripts": {
