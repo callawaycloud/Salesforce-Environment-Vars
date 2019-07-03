@@ -3,8 +3,8 @@
         {
             "path": "env-vars",
             "package": "env-vars",
-            "versionName": "ver 0.1",
-            "versionNumber": "0.1.2.NEXT",
+            "versionName": "ver 0.2",
+            "versionNumber": "0.2.0.NEXT",
             "default": true
         },
         {
@@ -34,6 +34,8 @@
         "vars-encrypt@0.1.0-8": "04t1C000000tfE1QAI",
         "env-vars@0.1.2-3": "04t1C000000tfE6QAI",
         "env-vars@0.1.2-4": "04t1C000000tfEBQAY",
-        "env-vars@0.1.2-5": "04t1C000000tfGMQAY"
+        "env-vars@0.1.2-5": "04t1C000000tfGMQAY",
+        "env-vars@0.1.3-1": "04t1C000000tfGlQAI",
+        "env-vars@0.2.0-1": "04t1C000000tfH0QAI"
     }
 }
