@@ -1,12 +1,10 @@
 # Salesforce Environment Variables
 
-***WARNING:*** This package will soon be released as an [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  I've you have already installed and want to stay up-to-sync with the latest improvements, there will be a manual migration process!
-
 A simple library for using Custom Metadata to manage simple Key/Value Environment variables + Admin UI.
 
 ![UI](https://user-images.githubusercontent.com/5217568/58003863-f841e400-7a9e-11e9-8e7a-27b710606086.png)
 
-*idea inspired by Ralph Callaway's work*
+***WARNING:*** This project has been updated to a [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  If you have already installed and want to stay up-to-sync with the latest improvements, then please follow the manaul [migration process](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/upgrade-from-prepackaged.md)!
 
 ## Install
 
@@ -24,12 +22,12 @@ login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000tfH0QAI`](
 
 Apex:
 ```java
-Map<String,String> fieldMap = (Map<String,String>) ENV.get('FIELD_MAP');
+Map<String,String> fieldMap = (Map<String,String>) VARS.ENV.get('FIELD_MAP');
 ```
 
 Formula:
 ```
-$CustomMetadata.ENV_Var__mdt.FIELD_MAP.Val__c
+$CustomMetadata.VARS__ENV__mdt.FIELD_MAP.Val__c
 ```
 <sup>1</sup>only the first 255 characters will be returned in formula!
 

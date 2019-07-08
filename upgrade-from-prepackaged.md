@@ -1,6 +1,6 @@
 # Upgrade from pre-namespaced version
 
-If you installed this package prior to the packaged namedspace releae, you will need to manually upgrade:
+If you installed this package prior to the "namespaced unlocked package release", you will need to manually upgrade:
 
 1. Install the packaged version
 1. Use the script below to migrate your `ENV_Var__mdt` to `VARS__ENV__mdt`
