@@ -35,7 +35,7 @@
     "build-prod": "npm run bundle-app-prod && npm run package-sfdc",
     "push-scratch": "sfdx force:source:push -u $npm_config_scratch_alias",
     "generate-ts-force": "ts-force-gen -j ./config/ts-force-config.json",
-    "create-version": "npm run build-prod && sfdx force:package:version:create -p env-vars -d env-vars -x --wait 10 -v $npm_config_hub_alias",
+    "create-version": "npm run build-prod && sfdx sfpm:release -p env-vars -d env-vars -v $npm_config_hub_alias",
     "test": "jest --no-cache --config ./config/jest.json",
     "test:update": "jest --no-cache --config jest.json -u",
     "reinstall": "rimraf node_modules dist && npm install"
