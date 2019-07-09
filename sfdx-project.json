@@ -3,8 +3,8 @@
         {
             "path": "env-vars",
             "package": "env-vars",
-            "versionName": "ver 0.2",
-            "versionNumber": "0.2.0.NEXT",
+            "versionName": "ver 0.3",
+            "versionNumber": "0.3.0.NEXT",
             "default": true
         },
         {
