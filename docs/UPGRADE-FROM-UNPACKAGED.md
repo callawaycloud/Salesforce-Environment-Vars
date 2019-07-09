@@ -4,7 +4,7 @@ If you installed this package prior to the "namespaced unlocked package release"
 
 1. Install the packaged version
 1. Use the script below to migrate your `ENV_Var__mdt` to `VARS__ENV__mdt`
-1. Update any refrenences to `Env.get` to `VARS.Env.get`
+1. Update any references to `Env.get` to `VARS.Env.get`
 1. Update any other references to `ENV_Var__mdt` to `VARS__ENV__mdt` (formula, direct queries, rest api, etc)
 
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Input, Button, Icon, Tooltip, Popover, message, Switch, Divider } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import { EnvVar, DataType } from '@src/types';
+import { Input, Button, Icon, Tooltip, message, Switch, Divider } from 'antd';
+import { EnvVar } from '@src/types';
 import { NotesModal } from './NotesModal';
 import { DataTypeSelect } from '../DataTypeSelect';
 import { DeleteButton } from './DeleteButton';
@@ -13,7 +12,7 @@ const InputGroup = Input.Group;
 export interface EnvVarItemProps {
   item: EnvVar;
   onRemove: (item: EnvVar) => void;
-  onUpdate: (item: EnvVar, field: keyof EnvVar, value: string|boolean) => void;
+  onUpdate: (item: EnvVar, field: keyof EnvVar, value: string | boolean) => void;
   onSave: (item: EnvVar) => void;
   onDragStart: (e: any, item: EnvVar) => void;
   onDragOver: (draggedOver: EnvVar) => void;
@@ -26,13 +25,23 @@ export interface EnvVarItemState {
 }
 
 export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState> {
-
+  private keyInput: React.RefObject<Input>;
   constructor(props: EnvVarItemProps) {
     super(props);
+    this.keyInput = React.createRef();
     this.state = {
       editing: false,
       actionsVisible: false,
     };
+  }
+
+  public focus = () => {
+    this.keyInput.current.input.focus();
+    this.keyInput.current.input.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center'
+    });
   }
 
   private copySuccess = () => {
@@ -81,7 +90,7 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
             unCheckedChildren={<Icon type="eye" />}
           />
         </Tooltip>
-        <Divider style={{margin:'15px 0px'}} />
+        <Divider style={{ margin: '15px 0px' }} />
         <NotesModal
           item={item}
           onSaveNotes={this.onNotesSave}
@@ -120,6 +129,7 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
           </Tooltip>
 
           <Input
+            ref={this.keyInput}
             style={keyStyle}
             onChange={(e) => { this.props.onUpdate(item, 'key', e.target.value); }}
             placeholder='KEY used to access this var.  Once set, cannot be changed'

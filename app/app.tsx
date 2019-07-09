@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Input, message, Spin, Switch } from 'antd';
+import { Button, Card, Divider, Input, message, Spin, Switch, Affix } from 'antd';
 import { hot } from 'react-hot-loader'; // needs to be before react!
 import * as React from 'react';
 import { EnvGroup } from './components/EnvGroup';
@@ -18,6 +18,7 @@ interface AppState {
 }
 
 class App extends React.Component<{}, AppState> {
+  private newRef = React.createRef<EnvVarItem>();
   private mdapi: MetadataService;
   private draggedItem: EnvVar;
   constructor(props: any) {
@@ -104,9 +105,9 @@ class App extends React.Component<{}, AppState> {
     const groups = this.state.groups.filter((g) => g !== undefined);
     const vars: EnvVar[] = [...this.state.vars].filter(v => v.group !== undefined);
     let groupVars = this.state.vars.filter(v => v.group === undefined)
-      groupVars.forEach(v => {
-        vars.push({ ...v, ...{ group: '' } });
-      });
+    groupVars.forEach(v => {
+      vars.push({ ...v, ...{ group: '' } });
+    });
     this.setState({ groups, vars });
   }
 
@@ -129,7 +130,12 @@ class App extends React.Component<{}, AppState> {
       notes: '',
       value: '',
     });
-    this.setState({ vars });
+
+    this.setState({ vars }, ()=>{
+      if (this.newRef && this.newRef.current) {
+        this.newRef.current.focus();
+      }
+    });
   }
 
   // === DML HANDLERS ===
@@ -204,7 +210,9 @@ class App extends React.Component<{}, AppState> {
 
       groupVars[group] = gVars.map((v, i) => {
         return (
+
           <EnvVarItem
+            ref={v.key ? null : this.newRef}
             key={i}
             item={v}
             onRemove={this.removeVar}
@@ -244,26 +252,35 @@ class App extends React.Component<{}, AppState> {
     );
 
     return (
+      <div>
+        <Card
+          title='Environment Variables'
+          extra={toc}
 
-      <Card
-        title='Environment Variables'
-        extra={toc}
-      >
-        <Spin spinning={this.state.loading} >
-          <Input.Search
-            placeholder='Search Keys or Values'
-            value={this.state.filter}
-            onChange={(e) => this.setState({ filter: e.target.value })}
-            allowClear={true}
-            style={{ width: '35%' }}
-          />
-          <Button style={{ marginLeft: 10 }} icon='folder' onClick={() => this.newGroup()}>Add Group</Button>
-          <SecretsEnabled style={{float:'right'}} enabled={this.state.secretsEnabled} />
-          <Divider dashed={true} />
-          {groupElements}
-          <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
-        </Spin>
-      </Card>
+        >
+          <Spin spinning={this.state.loading} >
+            <Input.Search
+              placeholder='Search Keys or Values'
+              value={this.state.filter}
+              onChange={(e) => this.setState({ filter: e.target.value })}
+              allowClear={true}
+              style={{ width: '35%' }}
+            />
+            <SecretsEnabled style={{ float: 'right' }} enabled={this.state.secretsEnabled} />
+
+            <Divider  dashed={true} />
+            {groupElements}
+
+          </Spin>
+
+        </Card>
+        <Affix offsetBottom={10}>
+          <Card>
+            <Button style={{ marginTop: 15 }} type='primary' icon='plus' onClick={this.addNew}>Add</Button>
+            <Button style={{ marginLeft: 10 }} icon='folder' onClick={() => this.newGroup()}>Add Group</Button>
+          </Card>
+        </Affix>
+      </div>
     );
   }
 

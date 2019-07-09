@@ -1,6 +1,6 @@
 # Enabling "Secret" Value support
 
-*WARNING: While these values are stored encrypted, anyone with the ability to execute APEX will be able to retrieve and view them. Be careful not to leak them in logs!*
+*WARNING: While these values are stored encrypted, anyone with the ability to execute APEX will be able to retrieve and view them. Be careful not to leak them in logs!  It is recommended that you use "Named Credentials" or a self-contained, "namespaced managed package" with protected settings for anything that is highly sensitive*
 
 ## Install
 
@@ -14,7 +14,7 @@ Once installed, you'll notice that the UI now shows "Secrets Enabled"
 
 ## Usage
 
-When creating a new env-var, you can mark it as secret BEFORE you save. 
+When creating a new "env var", you can mark it as "secret" BEFORE you save. 
 
 <img width="1342" alt="Salesforce_-_Unlimited_Edition" src="https://user-images.githubusercontent.com/5217568/60910786-f4c90e80-a23e-11e9-9806-6bf47a2a8f07.png">
 
@@ -24,9 +24,12 @@ When creating a new env-var, you can mark it as secret BEFORE you save.
 - A Var cannot be made secret after it is created
 - Secret vars can only be read by Apex.  They will not work in formulas, or via the API.
 
-
 ## How it works
 
-This package works by creating private AES key and storing it in a "Managed Protected Custom Settings" (as outlined by [salesforce best practices](https://trailhead.salesforce.com/content/learn/modules/secure-secret-storage/learn-about-platform-secret-protection)).  When a "env-var" is saved as "secreted", we encrypt it using this key before we store it. It will then be decrypted automatically to `VARS.Env.get()`.  
+This package works by creating private AES key and storing it in a "Managed Protected Custom Settings" (as outlined by [salesforce best practices](https://trailhead.salesforce.com/content/learn/modules/secure-secret-storage/learn-about-platform-secret-protection)).  
+
+When a "env-var" is saved as "secret", we encrypt it using this key before we store it. It will then be decrypted automatically in calls to `VARS.Env.get()`. 
+
+Thus anyone who can execute `VARS.Env.get()` will essentially have the ability to read the secret.
 
 
