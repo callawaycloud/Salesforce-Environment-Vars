@@ -4,15 +4,16 @@ A simple library for using Custom Metadata to manage simple Key/Value Environmen
 
 ![UI](https://user-images.githubusercontent.com/5217568/58003863-f841e400-7a9e-11e9-8e7a-27b710606086.png)
 
-***WARNING:*** This project has been updated to a [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  If you have already installed and want to stay up-to-sync with the latest improvements, then please follow the manaul [migration process](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/upgrade-from-prepackaged.md)!
+***WARNING:*** This project has been updated to a [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  If you have already installed and want to stay up-to-sync with the latest improvements, then please follow the manual [migration process](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/docs/upgrade-from-unpackaged.md)!
 
 ## Install
 
-### via sfdx-cli
+**via sfdx-cli**
 `sfdx force:package:install --package 04t1C000000tfH0QAI -u your@org.user`
 
-### via url
+**via url**
 login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000tfH0QAI`](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1C000000tfH0QAI). Choose `Install for: Admin Only`.
+
 
 ## Usage
 
@@ -45,8 +46,14 @@ $CustomMetadata.VARS__ENV__mdt.FIELD_MAP.Val__c
 ### copy as apex/formula code to clipboard
 ![copy code](https://user-images.githubusercontent.com/5217568/58001336-6636dd00-7a98-11e9-875b-a468d42633cc.png)
 
-### "typechecking" to prevent user input errors
+### "type-checking" to prevent user input errors
 ![copy code](https://user-images.githubusercontent.com/5217568/58004297-2ecc2e80-7aa0-11e9-9ca9-c0e2e5d4a0da.png)
+
+### Optional "secret" values Support
+
+In order to enable, [follow these instructions](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/docs/ENABLE-SECRETS.md).
+
+<img width="1342" alt="Salesforce_-_Unlimited_Edition" src="https://user-images.githubusercontent.com/5217568/60910786-f4c90e80-a23e-11e9-9806-6bf47a2a8f07.png">
 
 ### Quick Find on KEY or VALUE
 
@@ -63,6 +70,12 @@ https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-96
 
 ### Contributing/Modifying
 
-This project is built off the [B.A.S.S. Stack](https://github.com/ChuckJonas/bad-ass-salesforce-stack).  See Readme for details on how to develop.
+Project Overview:
+
+- `env-vars`: Salesforce metadata for core env-vars functionality
+- `app`: React UI for managing env-vars.  Uses [B.A.S.S. Stack](https://github.com/ChuckJonas/bad-ass-salesforce-stack)
+- `env-vars-encrypt`: managed package to allow for "secret" vars
+- `sf-env-vars-npm`: npm package to make using env-vars easy in js applications
+
 
 ** Powered by [Callaway Cloud Consulting](http://www.callawaycloud.com/) ** 
