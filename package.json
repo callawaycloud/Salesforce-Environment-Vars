@@ -35,7 +35,8 @@
     "build-prod": "npm run bundle-app-prod && npm run package-sfdc",
     "push-scratch": "sfdx force:source:push -u $npm_config_scratch_alias",
     "generate-ts-force": "ts-force-gen -j ./config/ts-force-config.json",
-    "create-version": "npm run build-prod && sfdx sfpm:release -p env-vars -d env-vars -v $npm_config_hub_alias",
+    "commit-build": "git add ./env-vars/main/default/staticresources/ENVVars.resource && git commit -m 'built react app'",
+    "create-version": "npm run build-prod && npm run commit-build && sfdx sfpm:release -p env-vars -d env-vars -v $npm_config_hub_alias",
     "test": "jest --no-cache --config ./config/jest.json",
     "test:update": "jest --no-cache --config jest.json -u",
     "reinstall": "rimraf node_modules dist && npm install"
