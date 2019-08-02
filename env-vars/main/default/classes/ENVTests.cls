@@ -16,6 +16,20 @@ public class ENVTests {
         System.assertEquals(value, retValue, 'Values Should Match');
     }
 
+    @isTest static void testStringTransform(){
+        String key = 'abc';
+        String value = 'XYZ';
+        ENV__mdt var = new ENV__mdt(
+            DeveloperName = key,
+            Value__c = value
+        );
+
+        Env.setCachedVars(new ENV__mdt[]{var});
+        String retValue = (String) Env.get(key, Env.Transform.TO_LOWER);
+
+        System.assertEquals(value.toLowerCase(), retValue, 'Values Should Match');
+    }
+
     @isTest static void testNumbers(){
         String key1 = 'var1';
         Integer value1 = 123;
@@ -72,6 +86,21 @@ public class ENVTests {
         String[] retValue = (String[]) Env.get(key);
 
         System.assertEquals(value, retValue, 'Values Should Match');
+    }
+
+    @isTest static void testStringArrTransform(){
+        String key = 'abc';
+        String[] value = new String[] {'a'};
+        ENV__mdt var = new ENV__mdt(
+            DeveloperName = key,
+            Value__c = JSON.serialize(value),
+            DataType__c = 'String[]'
+        );
+
+        Env.setCachedVars(new ENV__mdt[]{var});
+        String[] retValue = (String[]) Env.get(key, Env.Transform.TO_UPPER);
+
+        System.assertEquals('A', retValue[0], 'Values Should Match');
     }
 
     @isTest static void testStringMap(){
