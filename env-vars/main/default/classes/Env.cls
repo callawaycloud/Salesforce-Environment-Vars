@@ -9,7 +9,7 @@ global class Env {
 
     private static Map<String, ENV__mdt> cachedVars;
 
-    public static Object get(String key){
+    global static Object get(String key){
        return get(key, null);
     }
 
