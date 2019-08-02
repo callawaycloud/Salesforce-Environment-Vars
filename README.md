@@ -9,10 +9,10 @@ A simple library which uses Custom Metadata to manage simple Key/Value Environme
 ## Install
 
 **via sfdx-cli**
-`sfdx force:package:install --package 04t1C000000ODZJQA4 -u your@org.user`
+`sfdx force:package:install --package 04t1C000000ODZTQA4 -u your@org.user`
 
 **via url**
-login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000ODZJQA4`](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1C000000ODZJQA4). Choose `Install for: Admin Only`.
+login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000ODZTQA4`](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1C000000ODZTQA4). Choose `Install for: Admin Only`.
 
 
 ## Usage
