@@ -18,19 +18,30 @@ login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000AqjGQAS`](
 ## Usage
 
 1. Open Environment Variables from the app switcher (or "tabs" in classic)
-2. Add and Save some  env-vars
-3. Use in Apex or Formulas<sup>1</sup>
+2. Add and Save some env-vars
+3. Use in Apex, Formulas or [javascript applications](https://github.com/ChuckJonas/Salesforce-Environment-Vars/tree/master/sf-env-vars-npm).
 
-Apex:
+### Apex
+
 ```java
-Map<String,String> fieldMap = (Map<String,String>) VARS.ENV.get('FIELD_MAP');
+//basic usage
+Map<String,String> fieldMap = (Map<String,String>) VARS.ENV.get('MY_MAP');
+
+//with a string transform
+Map<String,String> fieldMap = (String[]) VARS.ENV.get('MY_ARRAY', VARS.ENV.Transform.TO_LOWER);
+
+// with ANY json
+Foo fieldMap = (Foo) VARS.ENV.get('MY_FOO', Foo.class);
+
 ```
 
-Formula:
+### Formula
+
 ```
 $CustomMetadata.VARS__ENV__mdt.FIELD_MAP.Val__c
 ```
-<sup>1</sup>only the first 255 characters will be returned in formula!
+
+Note: Only the first 255 characters will be returned in formula!
 
 ## Features
 
@@ -42,6 +53,7 @@ $CustomMetadata.VARS__ENV__mdt.FIELD_MAP.Val__c
 - `Boolean`: Format: `true` or `false`
 - `String[]`: Format: `["a","b","c"]`
 - `Map<String,String>`: Format: `{"456":"xyz","123":"abc"}`
+- `ANY`: Any valid JSON string
 
 ### copy apex/formula code to clipboard
 ![copy code](https://user-images.githubusercontent.com/5217568/58001336-6636dd00-7a98-11e9-875b-a468d42633cc.png)

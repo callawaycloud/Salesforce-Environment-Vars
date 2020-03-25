@@ -23,6 +23,7 @@ export const DataTypeSelect: React.FunctionComponent<DataTypeSelectProps> = (pro
       <Option key='Boolean'>Boolean</Option>
       <Option key='String[]'>String[]</Option>
       <Option key='Map<String,String>'>{'Map<String,String>'}</Option>
+      <Option key='ANY'>{'ANY'}</Option>
     </Select>
   );
 };

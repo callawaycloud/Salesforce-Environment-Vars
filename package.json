@@ -48,6 +48,7 @@
     "jsforce": "^1.9.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-json-view": "^1.19.1",
     "ts-force": "^2.6.2",
     "tslib": "^1.9.3"
   },

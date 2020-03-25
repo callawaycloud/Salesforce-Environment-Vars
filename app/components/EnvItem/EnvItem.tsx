@@ -40,14 +40,14 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
     this.keyInput.current.input.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
-      inline: 'center'
+      inline: 'center',
     });
   }
 
   private copySuccess = () => {
     message.success('copied to clipboard');
-    this.setState({ actionsVisible: false })
-  };
+    this.setState({ actionsVisible: false });
+  }
 
   private onNotesSave = (notes: string) => {
     this.props.onUpdate(this.props.item, 'notes', notes);
@@ -55,18 +55,18 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
   }
 
   private editFinished = () => {
-    let item = this.props.item;
+    const item = this.props.item;
     let val = item.value;
     if (validateType(item.dataType, item.value) && item.value &&
-      (item.dataType === 'Map<String,String>' || item.dataType === 'String[]')) {
-      val = JSON.stringify(JSON.parse(val), null, 1)
+      (item.dataType === 'Map<String,String>' || item.dataType === 'String[]' || item.dataType === 'ANY')) {
+      val = JSON.stringify(JSON.parse(val), null, 1);
       this.props.onUpdate(item, 'value', val);
     }
     this.setState({ editing: false });
   }
 
   public render() {
-    let { item } = this.props;
+    const { item } = this.props;
 
     const typeError = !validateType(item.dataType, item.value);
     const keyError = item.key && item.key.indexOf(' ') > -1; // [TODO] Better validation
@@ -76,18 +76,20 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
       keyStyle.color = 'red';
     }
 
-    let moreActions = (
+    const moreActions = (
       <MoreActions
-        onVisibleChange={(v) => { this.setState({ actionsVisible: v }) }}
+        onVisibleChange={(v) => { this.setState({ actionsVisible: v }); }}
         visible={this.state.actionsVisible}
       >
-        <Tooltip title='This cannot be changed or viewed after saving.  WARNING: Anyone with Apex permission will be able to view these values'>
+        <Tooltip
+          title='This cannot be changed or viewed after saving.  WARNING: Anyone with Apex permission will be able to view these values'
+        >
           Secret: <Switch
             disabled={!item.localOnly}
             checked={item.secret}
             onChange={(e) => this.props.onUpdate(this.props.item, 'secret', e)}
-            checkedChildren={<Icon type="eye-invisible" />}
-            unCheckedChildren={<Icon type="eye" />}
+            checkedChildren={<Icon type='eye-invisible' />}
+            unCheckedChildren={<Icon type='eye' />}
           />
         </Tooltip>
         <Divider style={{ margin: '15px 0px' }} />
@@ -96,14 +98,14 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
           onSaveNotes={this.onNotesSave}
         />
         <CopyCode
-          text="Copy Apex"
+          text='Copy Apex'
           icon='code'
           onCopy={this.copySuccess}
           codeFunc={getApex}
           item={item}
         />
         <CopyCode
-          text="Copy Formula"
+          text='Copy Formula'
           icon='number'
           disabled={this.props.item.secret}
           onCopy={this.copySuccess}
@@ -112,7 +114,7 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
         />
         <DeleteButton item={item} onRemove={this.props.onRemove} />
       </MoreActions>
-    )
+    );
 
     const canSave = item.key && item.hasChanges && (!typeError && !keyError);
 
@@ -148,7 +150,7 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
             editing={this.state.editing}
             onUpdate={(val) => { this.props.onUpdate(item, 'value', val); }}
             onEditFinished={this.editFinished}
-            onEditStart={() => { this.setState({ editing: true }) }}
+            onEditStart={() => { this.setState({ editing: true }); }}
           />
 
           {canSave && <Button type='primary' icon='save' onClick={() => { this.props.onSave(item); }} />}
@@ -159,5 +161,4 @@ export class EnvVarItem extends React.Component<EnvVarItemProps, EnvVarItemState
     );
   }
 }
-
 

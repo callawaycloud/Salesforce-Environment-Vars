@@ -3,22 +3,31 @@
 global class Env {
     global enum Transform {
         TO_LOWER,
-        TO_UPPER
+        TO_UPPER,
+        NONE
     }
 
     private static Map<String, ENV__mdt> cachedVars;
 
+    global static Object get(String key, Type classType) {
+        return JSON.deserialize(retrieveVar(key).Value__c, classType);
+    }
+
     global static Object get(String key) {
-        return get(key, null);
+        return get(key, Transform.NONE);
     }
 
     global static Object get(String key, Transform trans) {
+        return parseValue(retrieveVar(key), trans);
+    }
+
+    private static ENV__mdt retrieveVar(String key){
         if (cachedVars == null) {
             setCachedVars([SELECT DeveloperName, Datatype__c, Value__c, Secret__c FROM ENV__mdt]);
         }
 
         if (cachedVars.containsKey(key)) {
-            return parseValue(cachedVars.get(key), trans);
+            return cachedVars.get(key);
         }
         throw new ENVException('DeveloperName ' + key + ' not found exists in ENV__mdt!');
     }
@@ -50,10 +59,13 @@ global class Env {
                 return Boolean.valueOf(value);
             }
             when 'String[]' {
-                return JSON.Deserialize(transformString(var.Value__c, trans), List<String>.class);
+                return JSON.deserialize(transformString(var.Value__c, trans), List<String>.class);
             }
             when 'Map<String,String>' {
-                return JSON.Deserialize(transformString(var.Value__c, trans), Map<String, String>.class);
+                return JSON.deserialize(transformString(var.Value__c, trans), Map<String, String>.class);
+            }
+            when 'ANY' {
+                return JSON.deserializeUntyped(transformString(var.Value__c, trans));
             }
             when else {
                 return transformString(var.Value__c, trans);

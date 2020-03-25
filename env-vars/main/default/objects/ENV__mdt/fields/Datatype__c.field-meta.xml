@@ -42,6 +42,11 @@
                 <default>false</default>
                 <label>Map&lt;String,String&gt;</label>
             </value>
+            <value>
+                <fullName>ANY</fullName>
+                <default>false</default>
+                <label>ANY</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

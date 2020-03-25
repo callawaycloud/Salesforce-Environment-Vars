@@ -95,4 +95,31 @@ public class ENVTests {
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }
+
+    @isTest
+    static void testAnyJson() {
+        String key = 'abc';
+        Foo value = new Foo();
+        value.bar = 1;
+        value.foo = 'abc123';
+
+        ENV__mdt var = new ENV__mdt(
+            DeveloperName = key,
+            Value__c = JSON.serialize(value),
+            DataType__c = 'ANY'
+        );
+
+        Env.setCachedVars(new List<ENV__mdt>{ var });
+        
+        Map<String, Object> retMapValue = (Map<String, Object>) Env.get(key);
+        System.assertEquals(value.foo, retMapValue.get('foo'), 'Values Should Match');
+
+        Foo foo =  (Foo) ENV.get(key, Foo.class);
+        System.assertEquals(value.bar, foo.bar, 'Values Should Match');
+    }
+
+    private class Foo {
+        public Decimal bar;
+        public String foo;
+    }
 }

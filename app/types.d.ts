@@ -14,7 +14,7 @@ interface MetadataResult {
   errors: { message: string };
 }
 
-type DataType = 'String' | 'Integer' | 'Decimal' | 'Boolean' | 'String[]' | 'Map<String,String>';
+type DataType = 'String' | 'Integer' | 'Decimal' | 'Boolean' | 'String[]' | 'Map<String,String>' | 'ANY';
 
 interface EnvVar {
   key?: string;

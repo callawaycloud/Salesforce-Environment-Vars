@@ -1,14 +1,18 @@
 import { DataType, EnvVar } from '@src/types';
 
 export const getApex = (item: EnvVar) => {
-  return `(${item.dataType}) VARS.ENV.get('${item.key}');`;
+  let dataType: string = item.dataType;
+  if (dataType === 'ANY') {
+    dataType = 'Map<String, Object>';
+  }
+  return `(${dataType}) VARS.ENV.get('${item.key}');`;
 };
 
 export const getFormula = (item: EnvVar) => {
   return `$CustomMetadata.VARS__ENV__mdt.${item.key}.Val__c`;
 };
 
-export const validateType = (dataType: DataType, value: string): Boolean => {
+export const validateType = (dataType: DataType, value: string): boolean => {
   if (!value) {
     return true;
   }
@@ -43,7 +47,23 @@ export const validateType = (dataType: DataType, value: string): Boolean => {
       } catch (e) {
         return false;
       }
+    case 'ANY':
+      try {
+        JSON.parse(value);
+        return true;
+      } catch (e) {
+        return false;
+      }
     default:
       return true;
   }
-}
+};
+
+export const isJson = (str: string) => {
+  try {
+      JSON.parse(str);
+  } catch (e) {
+      return false;
+  }
+  return true;
+};
