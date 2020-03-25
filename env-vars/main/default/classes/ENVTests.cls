@@ -1,54 +1,41 @@
 // Author: Charles Jonas (charlie@callaway.cloud)
 @isTest
 public class ENVTests {
-
-    @isTest static void testString(){
+    @isTest
+    static void testString() {
         String key = 'abc';
         String value = '123';
-        ENV__mdt var = new ENV__mdt(
-            DeveloperName = key,
-            Value__c = value
-        );
+        ENV__mdt var = new ENV__mdt(DeveloperName = key, Value__c = value);
 
-        Env.setCachedVars(new ENV__mdt[]{var});
+        Env.setCachedVars(new List<ENV__mdt>{ var });
         String retValue = (String) Env.get(key);
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }
 
-    @isTest static void testStringTransform(){
+    @isTest
+    static void testStringTransform() {
         String key = 'abc';
         String value = 'XYZ';
-        ENV__mdt var = new ENV__mdt(
-            DeveloperName = key,
-            Value__c = value
-        );
+        ENV__mdt var = new ENV__mdt(DeveloperName = key, Value__c = value);
 
-        Env.setCachedVars(new ENV__mdt[]{var});
+        Env.setCachedVars(new List<ENV__mdt>{ var });
         String retValue = (String) Env.get(key, Env.Transform.TO_LOWER);
 
         System.assertEquals(value.toLowerCase(), retValue, 'Values Should Match');
     }
 
-    @isTest static void testNumbers(){
+    @isTest
+    static void testNumbers() {
         String key1 = 'var1';
         Integer value1 = 123;
-        ENV__mdt var1 = new ENV__mdt(
-            DeveloperName = key1,
-            Value__c = String.valueof(value1),
-            DataType__c = 'Integer'
-        );
+        ENV__mdt var1 = new ENV__mdt(DeveloperName = key1, Value__c = String.valueof(value1), DataType__c = 'Integer');
 
         String key2 = 'var2';
         Decimal value2 = 123.99;
-        ENV__mdt var2 = new ENV__mdt(
-            DeveloperName = key2,
-            Value__c = String.valueof(value2),
-            DataType__c = 'Decimal'
-        );
-    
+        ENV__mdt var2 = new ENV__mdt(DeveloperName = key2, Value__c = String.valueof(value2), DataType__c = 'Decimal');
 
-        Env.setCachedVars(new ENV__mdt[]{var1, var2});
+        Env.setCachedVars(new List<ENV__mdt>{ var1, var2 });
 
         Integer retValue1 = (Integer) Env.get(key1);
         System.assertEquals(value1, retValue1, 'Values Should Match');
@@ -57,63 +44,54 @@ public class ENVTests {
         System.assertEquals(value2, retValue2, 'Values Should Match');
     }
 
-    @isTest static void testBoolean(){
+    @isTest
+    static void testBoolean() {
         String key = 'abc';
         Boolean value = true;
-        ENV__mdt var = new ENV__mdt(
-            DeveloperName = key,
-            Value__c = String.valueOf(value),
-            DataType__c = 'Boolean'
-        );
+        ENV__mdt var = new ENV__mdt(DeveloperName = key, Value__c = String.valueOf(value), DataType__c = 'Boolean');
 
-        Env.setCachedVars(new ENV__mdt[]{var});
+        Env.setCachedVars(new List<ENV__mdt>{ var });
         Boolean retValue = (Boolean) Env.get(key);
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }
 
-
-    @isTest static void testStringArr(){
+    @isTest
+    static void testStringArr() {
         String key = 'abc';
-        String[] value = new String[] {'1,','2;','[asd]|'};
-        ENV__mdt var = new ENV__mdt(
-            DeveloperName = key,
-            Value__c = JSON.serialize(value),
-            DataType__c = 'String[]'
-        );
+        String[] value = new List<String>{ '1,', '2;', '[asd]|' };
+        ENV__mdt var = new ENV__mdt(DeveloperName = key, Value__c = JSON.serialize(value), DataType__c = 'String[]');
 
-        Env.setCachedVars(new ENV__mdt[]{var});
+        Env.setCachedVars(new List<ENV__mdt>{ var });
         String[] retValue = (String[]) Env.get(key);
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }
 
-    @isTest static void testStringArrTransform(){
+    @isTest
+    static void testStringArrTransform() {
         String key = 'abc';
-        String[] value = new String[] {'a'};
-        ENV__mdt var = new ENV__mdt(
-            DeveloperName = key,
-            Value__c = JSON.serialize(value),
-            DataType__c = 'String[]'
-        );
+        String[] value = new List<String>{ 'a' };
+        ENV__mdt var = new ENV__mdt(DeveloperName = key, Value__c = JSON.serialize(value), DataType__c = 'String[]');
 
-        Env.setCachedVars(new ENV__mdt[]{var});
+        Env.setCachedVars(new List<ENV__mdt>{ var });
         String[] retValue = (String[]) Env.get(key, Env.Transform.TO_UPPER);
 
         System.assertEquals('A', retValue[0], 'Values Should Match');
     }
 
-    @isTest static void testStringMap(){
+    @isTest
+    static void testStringMap() {
         String key = 'abc';
-        Map<string,string> value = new Map<string,string> {'123'=>'abc', '456' => 'xyz'};
+        Map<string, string> value = new Map<string, string>{ '123' => 'abc', '456' => 'xyz' };
         ENV__mdt var = new ENV__mdt(
             DeveloperName = key,
             Value__c = JSON.serialize(value),
             DataType__c = 'Map<String,String>'
         );
 
-        Env.setCachedVars(new ENV__mdt[]{var});
-        Map<String,String> retValue = (Map<String,String>) Env.get(key);
+        Env.setCachedVars(new List<ENV__mdt>{ var });
+        Map<String, String> retValue = (Map<String, String>) Env.get(key);
 
         System.assertEquals(value, retValue, 'Values Should Match');
     }

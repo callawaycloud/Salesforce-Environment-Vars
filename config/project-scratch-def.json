@@ -5,6 +5,12 @@
   "settings": {
     "orgPreferenceSettings": {
       "s1DesktopEnabled": true
+    },
+    "securitySettings": {
+      "enableAdminLoginAsAnyUser": true,
+      "sessionSettings": {
+        "forceRelogin": false
+      }
     }
   }
 }

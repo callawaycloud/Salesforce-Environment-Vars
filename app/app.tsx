@@ -27,16 +27,16 @@ class App extends React.Component<{}, AppState> {
       loading: true,
       vars: [],
       groups: [''],
-      secretsEnabled: false
+      secretsEnabled: false,
     };
   }
 
   // RETRIEVE METADATA
   public async componentDidMount() {
-    let secretsEnabled = await getSecretsEnabled();
+    const secretsEnabled = await getSecretsEnabled();
 
     this.mdapi = new MetadataService();
-    let vars = await this.mdapi.retrieveEnvVars();
+    const vars = await this.mdapi.retrieveEnvVars();
     const groups = vars.reduce((groups, v) => {
       const group = v.group;
       if (!groups.includes(group)) {
@@ -103,9 +103,9 @@ class App extends React.Component<{}, AppState> {
 
   public cancelNewGroup = () => {
     const groups = this.state.groups.filter((g) => g !== undefined);
-    const vars: EnvVar[] = [...this.state.vars].filter(v => v.group !== undefined);
-    let groupVars = this.state.vars.filter(v => v.group === undefined)
-    groupVars.forEach(v => {
+    const vars: EnvVar[] = [...this.state.vars].filter((v) => v.group !== undefined);
+    const groupVars = this.state.vars.filter((v) => v.group === undefined);
+    groupVars.forEach((v) => {
       vars.push({ ...v, ...{ group: '' } });
     });
     this.setState({ groups, vars });
@@ -131,7 +131,7 @@ class App extends React.Component<{}, AppState> {
       value: '',
     });
 
-    this.setState({ vars }, ()=>{
+    this.setState({ vars }, () => {
       if (this.newRef && this.newRef.current) {
         this.newRef.current.focus();
       }
@@ -146,9 +146,9 @@ class App extends React.Component<{}, AppState> {
       const groups = [...this.state.groups];
       groups[gIndex] = newName;
 
-      const vars: EnvVar[] = [...this.state.vars].filter(v => v.group !== oldName);
-      let groupVars = this.state.vars.filter(v => v.group === oldName)
-      groupVars.forEach(v => {
+      const vars: EnvVar[] = [...this.state.vars].filter((v) => v.group !== oldName);
+      const groupVars = this.state.vars.filter((v) => v.group === oldName);
+      groupVars.forEach((v) => {
         vars.push({ ...v, ...{ group: newName } });
       });
       try {
@@ -174,13 +174,13 @@ class App extends React.Component<{}, AppState> {
         newVar = { hasChanges: false, localOnly: false, dmlError: false };
       } catch (e) {
         newVar = { dmlError: true };
-        message.error(e);
+        message.error(e.toString());
       }
 
       const vars = [...this.state.vars];
       vars[index] = { ...item, ...newVar };
       this.setState({ vars, loading: false });
-    })
+    });
   }
 
   private removeVar = async (item: EnvVar) => {
@@ -191,12 +191,12 @@ class App extends React.Component<{}, AppState> {
         try {
           await this.mdapi.deleteEnvVar(item);
         } catch (e) {
-          message.error(e);
+          message.error(e.toString());
         }
       }
       const vars = this.state.vars.filter((_, i) => i !== index);
       this.setState({ vars, loading: false });
-    })
+    });
   }
 
   // === RENDER ===
@@ -291,7 +291,7 @@ class App extends React.Component<{}, AppState> {
       vars = vars.filter((v) => {
         return v.key && v.key.toLocaleLowerCase().includes(filter)
           || v.value && v.value.toLocaleLowerCase().includes(filter);
-      })
+      });
     }
     return vars;
   }

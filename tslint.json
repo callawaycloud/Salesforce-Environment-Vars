@@ -5,7 +5,7 @@
   ],
   "rules": {
   "ter-indent": [
-      4,
+      2,
       {
         "SwitchCase": 1
       }
@@ -19,7 +19,7 @@
     "object-literal-sort-keys": false,
     "quotemark": [true, "single"],
     "ordered-imports": false,
-    "jsx-no-lambda": true, //https://stackoverflow.com/questions/36677733/why-shouldnt-jsx-props-use-arrow-functions-or-bind
+    "jsx-no-lambda": false,
     "member-ordering": false,
     "no-implicit-dependencies": false,
     "no-var-requires": false

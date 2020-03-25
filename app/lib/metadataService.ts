@@ -59,17 +59,17 @@ export class MetadataService {
 
   public saveEnvVars = async (item: EnvVar) => {
     let value = item.value;
-    if(item.secret){
+    if (item.secret) {
       value = await createSecret(item.value);
     }
     // tslint:disable-next-line: no-object-literal-type-assertion
-    let val = value.slice(0, Math.min(255, value.length));
+    const val = value.slice(0, Math.min(255, value.length));
 
     const payload: jsforce.MetadataInfo = {
       fullName: `${ENV_PREFIX}.${item.key}`,
       label: item.key,
       values: [
-        { field: EnvVarRecord.FIELDS['value'].apiName, value: value },
+        { field: EnvVarRecord.FIELDS['value'].apiName, value },
         { field: EnvVarRecord.FIELDS['val'].apiName, value: val },
         { field: EnvVarRecord.FIELDS['datatype'].apiName, value: item.dataType },
         { field: EnvVarRecord.FIELDS['group'].apiName, value: item.group },
@@ -85,8 +85,7 @@ export class MetadataService {
       result = await this.mdapi.update(CUSTOM_METADATA, payload) as any as MetadataResult;
     }
     if (!result.success) {
-      throw new Error(result.errors.message);
-    }
+      throw new Error(result.errors.message);    }
   }
 
   public deleteEnvVar = async (item: EnvVar) => {
