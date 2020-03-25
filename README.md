@@ -6,7 +6,7 @@ A simple library which uses Custom Metadata to manage simple Key/Value Environme
 
 ***NOTE:*** This project has been updated to a [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  If you have already installed and want to stay up-to-sync with the latest improvements, then please follow the [manual migration process](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/docs/UPGRADE-FROM-UNPACKAGED.md)!
 
-## Install
+## 📦 Install
 
 **via sfdx-cli**
 `sfdx force:package:install --package 04t1C000000AqjGQAS -u your@org.user`
@@ -15,7 +15,7 @@ A simple library which uses Custom Metadata to manage simple Key/Value Environme
 login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000AqjGQAS`](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1C000000AqjGQAS). Choose `Install for: Admin Only`.
 
 
-## Usage
+## 🔨 Usage
 
 1. Open Environment Variables from the app switcher (or "tabs" in classic)
 2. Add and Save some env-vars
@@ -43,7 +43,7 @@ $CustomMetadata.VARS__ENV__mdt.FIELD_MAP.Val__c
 
 Note: Only the first 255 characters will be returned in formula!
 
-## Features
+## ✨Features
 
 ### Currently supports the following types:
 
@@ -55,33 +55,47 @@ Note: Only the first 255 characters will be returned in formula!
 - `Map<String,String>`: Format: `{"456":"xyz","123":"abc"}`
 - `ANY`: Any valid JSON string
 
-### copy apex/formula code to clipboard
+### Copy apex/formula code to clipboard
 ![copy code](https://user-images.githubusercontent.com/5217568/58001336-6636dd00-7a98-11e9-875b-a468d42633cc.png)
 
-### "type-checking" to prevent user input errors
+### "Type-checking" to prevent user input errors
 ![copy code](https://user-images.githubusercontent.com/5217568/58004297-2ecc2e80-7aa0-11e9-9ca9-c0e2e5d4a0da.png)
 
-### "secret" Values Support (Optional)
+### "Secret" Values Support (Optional)
 
 <img width="1342" alt="Salesforce_-_Unlimited_Edition" src="https://user-images.githubusercontent.com/5217568/60910786-f4c90e80-a23e-11e9-9806-6bf47a2a8f07.png">
 
 In order to enable, [follow these instructions](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/docs/ENABLE-SECRETS.md).
 
 
-### Quick Find on KEY or VALUE
+### Quick Find
 
-### auto-formatting of JSON types
+Quickly filter VARS based on either key or value string search.
 
-### ability to group like "VARS" together
+### Auto-formatting of JSON types
 
-### ability to add Notes
+Automatically formats JSON after editing
+
+### Ability to group like "VARS" together
+
+<img width="947" alt="https___drive-connect-5888-dev-ed--vars_visualforce_com_apex_env_vars_local_1" src="https://user-images.githubusercontent.com/5217568/77575880-c7d68d80-6e99-11ea-84b4-fbf92231639e.png">
+
+
+### Ability to add Notes
+
+Add information about how it's used, how to manage it, etc
+
 ![notes](
 https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-9641-5ef774ea603f.png)
 
 ### Table of Contents / Glossary Index
 
+Allows you to quickly get an overview of all ENV vars and how they are used.
 
-## Contributing/Modifying
+<img width="1628" alt="https___drive-connect-5888-dev-ed--vars_visualforce_com_apex_env_vars_local_1" src="https://user-images.githubusercontent.com/5217568/77575604-64e4f680-6e99-11ea-8623-a18ec1eed9c7.png">
+
+
+## 🤝 Contributing/Modifying
 
 Project Overview:
 
