@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { setDefaultConfig } from 'ts-force';
+const queryString = require('query-string');
 
 import App from './app';
 
@@ -15,7 +16,12 @@ declare var __ACCESSTOKEN__: string;
 // setup ts-force auth
 setDefaultConfig({
   accessToken: __ACCESSTOKEN__,
-  instanceUrl:  __RESTHOST__,
+  instanceUrl: __RESTHOST__
 });
 
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
+const parsed = queryString.parse(location.search);
+
+ReactDOM.render(
+  <App loadDisplayGroup={parsed.group} loadDisplayEnv={parsed.key} />,
+  document.getElementById('root') as HTMLElement
+);

@@ -1,6 +1,5 @@
 import { DEFAULT_CONFIG } from 'ts-force/build/auth/baseConfig';
 import { EnvVarRecord } from '@src/generated';
-import { EnvVar, DataType, MetadataResult } from '@src/types';
 import * as jsforce from 'jsforce';
 import { createSecret } from './secretService';
 
@@ -19,12 +18,12 @@ export class MetadataService {
   public retrieveEnvVars = async (): Promise<EnvVar[]> => {
     const varsRecords = await EnvVarRecord.retrieve((fields) => {
       return {
-        select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes', 'secret'),
+        select: fields.select('id', 'developerName', 'datatype', 'value', 'group', 'notes', 'secret', "vARSJsonSchema"),
       };
     });
     if (varsRecords.length > 0) {
       const vars = varsRecords.map<EnvVar>((vRec) => {
-        const { developerName: key, value, datatype, group, notes, secret } = vRec;
+        const { developerName: key, value, datatype, group, notes, secret, vARSJsonSchema } = vRec;
         const dataType = datatype as DataType;
         return {
           key,
@@ -33,6 +32,7 @@ export class MetadataService {
           secret,
           group: group || '',
           notes: notes || '',
+          jsonSchema: vARSJsonSchema
         };
       });
 
@@ -75,6 +75,7 @@ export class MetadataService {
         { field: EnvVarRecord.FIELDS['group'].apiName, value: item.group },
         { field: EnvVarRecord.FIELDS['notes'].apiName, value: item.notes },
         { field: EnvVarRecord.FIELDS['secret'].apiName, value: item.secret },
+        { field: EnvVarRecord.FIELDS['vARSJsonSchema'].apiName, value: item.jsonSchema },
       ],
     } as jsforce.MetadataInfo;
 
@@ -85,7 +86,8 @@ export class MetadataService {
       result = await this.mdapi.update(CUSTOM_METADATA, payload) as any as MetadataResult;
     }
     if (!result.success) {
-      throw new Error(result.errors.message);    }
+      throw new Error(result.errors.message);
+    }
   }
 
   public deleteEnvVar = async (item: EnvVar) => {

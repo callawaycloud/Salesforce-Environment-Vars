@@ -48,6 +48,11 @@ export class EnvVarRecord extends RestObject {
      */
     @sField({ apiName: 'VARS__Value__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Value', externalId: false })
     public readonly value: string;
+    /**
+     * Used to validate "ANY" json type
+     */
+    @sField({ apiName: 'VARS__Json_Schema__c', createable: false, updateable: false, required: false, reference: undefined, childRelationship: false, salesforceType: SalesforceFieldType.TEXTAREA, salesforceLabel: 'Json Schema', externalId: false })
+    public readonly vARSJsonSchema: string;
 
     constructor(fields?: EnvVarRecordFields, restInstance?: Rest) {
         super('VARS__ENV__mdt', restInstance);
@@ -64,6 +69,7 @@ export class EnvVarRecord extends RestObject {
         this.secret = void 0;
         this.val = void 0;
         this.value = void 0;
+        this.vARSJsonSchema = void 0;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }

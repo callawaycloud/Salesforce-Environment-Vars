@@ -1,47 +1,47 @@
 {
-    "packageDirectories": [
-        {
-            "path": "env-vars",
-            "package": "env-vars",
-            "versionName": "ver 0.8",
-            "versionNumber": "0.8.0.NEXT",
-            "default": true
-        },
-        {
-            "path": "vars-encrypt",
-            "package": "vars-encrypt",
-            "versionName": "ver 0.1",
-            "versionNumber": "0.1.0.NEXT",
-            "default": false
-        }
-    ],
-    "namespace": "VARS",
-    "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "45.0",
-    "packageAliases": {
-        "env-vars": "0Ho1C0000004C9wSAE",
-        "vars-encrypt": "0Ho1C0000004CA6SAM",
-        "env-vars@0.1.1-1": "04t1C000000teyUQAQ",
-        "env-vars@0.1.2-1": "04t1C000000teyZQAQ",
-        "vars-encrypt@0.1.0-1": "04t1C000000tezIQAQ",
-        "vars-encrypt@0.1.0-2": "04t1C000000tezNQAQ",
-        "vars-encrypt@0.1.0-3": "04t1C000000tezSQAQ",
-        "vars-encrypt@0.1.0-4": "04t1C000000tezXQAQ",
-        "vars-encrypt@0.1.0-5": "04t1C000000tezhQAA",
-        "vars-encrypt@0.1.0-6": "04t1C000000tezmQAA",
-        "env-vars@0.1.2-2": "04t1C000000tf01QAA",
-        "vars-encrypt@0.1.0-7": "04t1C000000tf06QAA",
-        "vars-encrypt@0.1.0-8": "04t1C000000tfE1QAI",
-        "env-vars@0.1.2-3": "04t1C000000tfE6QAI",
-        "env-vars@0.1.2-4": "04t1C000000tfEBQAY",
-        "env-vars@0.1.2-5": "04t1C000000tfGMQAY",
-        "env-vars@0.1.3-1": "04t1C000000tfGlQAI",
-        "env-vars@0.2.0-1": "04t1C000000tfH0QAI",
-        "env-vars@0.3.0-1": "04t1C000000ODWZQA4",
-        "env-vars@0.4.0-1": "04t1C000000ODWeQAO",
-        "env-vars@0.5.0-1": "04t1C000000ODZJQA4",
-        "env-vars@0.6.0-1": "04t1C000000ODZTQA4",
-        "env-vars@0.7.0-1": "04t1C000000AqjGQAS",
-        "env-vars@0.8.0-1": "04t1C000000AqjLQAS"
+  "packageDirectories": [
+    {
+      "path": "env-vars",
+      "package": "env-vars",
+      "versionName": "ver 1.0",
+      "versionNumber": "1.0.0.NEXT",
+      "default": true
+    },
+    {
+      "path": "vars-encrypt",
+      "package": "vars-encrypt",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "default": false
     }
+  ],
+  "namespace": "VARS",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "45.0",
+  "packageAliases": {
+    "env-vars": "0Ho1C0000004C9wSAE",
+    "vars-encrypt": "0Ho1C0000004CA6SAM",
+    "env-vars@0.1.1-1": "04t1C000000teyUQAQ",
+    "env-vars@0.1.2-1": "04t1C000000teyZQAQ",
+    "vars-encrypt@0.1.0-1": "04t1C000000tezIQAQ",
+    "vars-encrypt@0.1.0-2": "04t1C000000tezNQAQ",
+    "vars-encrypt@0.1.0-3": "04t1C000000tezSQAQ",
+    "vars-encrypt@0.1.0-4": "04t1C000000tezXQAQ",
+    "vars-encrypt@0.1.0-5": "04t1C000000tezhQAA",
+    "vars-encrypt@0.1.0-6": "04t1C000000tezmQAA",
+    "env-vars@0.1.2-2": "04t1C000000tf01QAA",
+    "vars-encrypt@0.1.0-7": "04t1C000000tf06QAA",
+    "vars-encrypt@0.1.0-8": "04t1C000000tfE1QAI",
+    "env-vars@0.1.2-3": "04t1C000000tfE6QAI",
+    "env-vars@0.1.2-4": "04t1C000000tfEBQAY",
+    "env-vars@0.1.2-5": "04t1C000000tfGMQAY",
+    "env-vars@0.1.3-1": "04t1C000000tfGlQAI",
+    "env-vars@0.2.0-1": "04t1C000000tfH0QAI",
+    "env-vars@0.3.0-1": "04t1C000000ODWZQA4",
+    "env-vars@0.4.0-1": "04t1C000000ODWeQAO",
+    "env-vars@0.5.0-1": "04t1C000000ODZJQA4",
+    "env-vars@0.6.0-1": "04t1C000000ODZTQA4",
+    "env-vars@0.7.0-1": "04t1C000000AqjGQAS",
+    "env-vars@0.8.0-1": "04t1C000000AqjLQAS"
+  }
 }
