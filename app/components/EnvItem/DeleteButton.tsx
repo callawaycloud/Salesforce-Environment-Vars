@@ -1,26 +1,31 @@
 import * as React from 'react';
-import { EnvVar } from "@src/types";
-import { Popconfirm, Icon, Button } from "antd";
+import { Popconfirm, Button } from 'antd';
+import { QuestionCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface DeleteButtonProps {
   item: EnvVar;
-  onRemove: (item: EnvVar) => void;
+  onRemove: () => void;
 }
 
-export const DeleteButton: React.FunctionComponent<DeleteButtonProps> = (props) => {
+export const DeleteButton: React.FunctionComponent<DeleteButtonProps> = props => {
   if (!props.item.localOnly) {
     const del = (
       <Popconfirm
-        icon={<Icon type='question-circle-o' style={{ color: 'red' }} />}
-        title='Are you sure？'
-        okType='danger'
+        icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+        title='Are you sure？This Cannot be undone!!!'
+        okButtonProps={{ danger: true }}
         okText='DELETE'
         cancelText='No'
-        onConfirm={() => { props.onRemove(props.item); }} >
-        <Button type='danger' icon='delete' >Delete</Button>
+        onConfirm={() => {
+          props.onRemove();
+        }}
+      >
+        <Button size='small' danger={true} icon={<DeleteOutlined />}>
+          Delete
+        </Button>
       </Popconfirm>
     );
     return del;
   }
   return null;
-}
+};

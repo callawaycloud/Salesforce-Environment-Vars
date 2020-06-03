@@ -1,4 +1,5 @@
-import { DataType, EnvVar } from '@src/types';
+import { Validator } from 'jsonschema';
+import { message } from 'antd';
 
 export const getApex = (item: EnvVar) => {
   let dataType: string = item.dataType;
@@ -12,7 +13,11 @@ export const getFormula = (item: EnvVar) => {
   return `$CustomMetadata.VARS__ENV__mdt.${item.key}.Val__c`;
 };
 
-export const validateType = (dataType: DataType, value: string): boolean => {
+const jsonValidator = new Validator();
+
+export const validateType = (item: EnvVar): boolean | string[] => {
+  const { dataType, value } = item;
+
   if (!value) {
     return true;
   }
@@ -49,7 +54,19 @@ export const validateType = (dataType: DataType, value: string): boolean => {
       }
     case 'ANY':
       try {
-        JSON.parse(value);
+        const jsonValue = JSON.parse(value);
+        if (item.jsonSchema) {
+          try {
+            const schema = JSON.parse(item.jsonSchema);
+            const result = jsonValidator.validate(jsonValue, schema)
+            if (!result.valid) {
+              return result.errors.map(e => e.toString());
+            }
+          } catch (e) {
+            console.warn('Failed to validate json', e);
+          }
+        }
+
         return true;
       } catch (e) {
         return false;
@@ -59,11 +76,16 @@ export const validateType = (dataType: DataType, value: string): boolean => {
   }
 };
 
-export const isJson = (str: string) => {
+export const copy = (text: string, msg: string) => {
+  navigator.clipboard.writeText(text);
+  message.info(msg);
+};
+
+export function isJson(str: string) {
   try {
-      JSON.parse(str);
+    JSON.parse(str);
   } catch (e) {
-      return false;
+    return false;
   }
   return true;
-};
+}

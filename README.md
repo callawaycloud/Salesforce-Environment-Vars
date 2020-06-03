@@ -2,18 +2,19 @@
 
 A simple library which uses Custom Metadata to manage simple Key/Value Environment variables.  Includes a custom UI to make configuration as easy & error free as possible.
 
-![UI](https://user-images.githubusercontent.com/5217568/58003863-f841e400-7a9e-11e9-8e7a-27b710606086.png)
-
-***NOTE:*** This project has been updated to a [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  If you have already installed and want to stay up-to-sync with the latest improvements, then please follow the [manual migration process](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/docs/UPGRADE-FROM-UNPACKAGED.md)!
+![UI](https://user-images.githubusercontent.com/5217568/82095896-39260600-96bd-11ea-879f-0637d78f1a78.png)
 
 ## 📦 Install
 
 **via sfdx-cli**
-`sfdx force:package:install --package 04t1C000000AqjLQAS -u your@org.user`
+`sfdx force:package:install --package 04t1C000000lIDuQAM -u your@org.user`
 
 **via url**
-login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000AqjLQAS`](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1C000000AqjLQAS). Choose `Install for: Admin Only`.
+login and navigate to [`/packaging/installPackage.apexp?p0=04t1C000000lIDuQAM`](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t1C000000lIDuQAM). Choose `Install for: Admin Only`.
 
+### Upgrading
+
+This project has been updated to a [namespaced unlocked package](https://github.com/ChuckJonas/Salesforce-Environment-Vars/issues/3).  If you installed before the namespace was added, and want to stay up-to-sync with the latest improvements, then please follow the [manual migration process](https://github.com/ChuckJonas/Salesforce-Environment-Vars/blob/master/docs/UPGRADE-FROM-UNPACKAGED.md)!
 
 ## 🔨 Usage
 
@@ -59,7 +60,11 @@ Note: Only the first 255 characters will be returned in formula!
 ![copy code](https://user-images.githubusercontent.com/5217568/58001336-6636dd00-7a98-11e9-875b-a468d42633cc.png)
 
 ### "Type-checking" to prevent user input errors
-![copy code](https://user-images.githubusercontent.com/5217568/58004297-2ecc2e80-7aa0-11e9-9ca9-c0e2e5d4a0da.png)
+
+- Simple type checking on primitive types.
+- ability to apply JSON Schema to `ANY` json type!
+
+![type checking](https://user-images.githubusercontent.com/5217568/58004297-2ecc2e80-7aa0-11e9-9ca9-c0e2e5d4a0da.png)
 
 ### "Secret" Values Support (Optional)
 
@@ -87,12 +92,6 @@ Add information about how it's used, how to manage it, etc
 
 ![notes](
 https://user-images.githubusercontent.com/5217568/58004459-7d79c880-7aa0-11e9-9641-5ef774ea603f.png)
-
-### Table of Contents / Glossary Index
-
-Allows you to quickly get an overview of all ENV vars and how they are used.
-
-<img width="1628" alt="https___drive-connect-5888-dev-ed--vars_visualforce_com_apex_env_vars_local_1" src="https://user-images.githubusercontent.com/5217568/77575604-64e4f680-6e99-11ea-8623-a18ec1eed9c7.png">
 
 
 ## 🤝 Contributing/Modifying
