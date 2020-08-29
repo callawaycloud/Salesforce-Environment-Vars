@@ -2,7 +2,7 @@ import { Button, Card, Divider, Input, message, Spin, Affix } from 'antd';
 import { hot } from 'react-hot-loader'; // needs to be before react!
 import * as React from 'react';
 import { MetadataService } from './lib/metadataService';
-import { SecretsEnabled } from './components/Secrets';
+import { SecretsEnabled } from './components/secrets';
 import { getSecretsEnabled } from './lib/secretService';
 import { EnvTable } from './components/EnvTable';
 import { PlusOutlined } from '@ant-design/icons';
@@ -135,6 +135,7 @@ class App extends React.Component<AppProps, AppState> {
             item={editing}
             groups={groups}
             blockUI={this.state.loading}
+            secretsEnabled={this.state.secretsEnabled}
             onUpdate={this.updateEditing}
             onSave={() => this.saveVar(editing)}
             onCancel={() => this.setState({ editing: undefined })}

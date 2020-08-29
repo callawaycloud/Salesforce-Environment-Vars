@@ -28,15 +28,11 @@ export const Editor: React.FunctionComponent<EditorProps> = props => {
     );
   }
 
-  let tip: string | JSX.Element = props.item.notes;
+  let tip: string | JSX.Element = null;
   if (props.item.value.length > 255) {
     tip = (
       <div>
-        {tip}
-        <div>
-          <WarningFilled style={{ color: 'red' }} /> Length Exceeds 255 characters! The entire value cannot be used in a
-          formula.
-        </div>
+        <WarningFilled /> Length Exceeds 255 characters! The entire value cannot be used in a formula.
       </div>
     );
   }

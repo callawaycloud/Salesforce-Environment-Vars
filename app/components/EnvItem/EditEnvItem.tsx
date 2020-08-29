@@ -3,7 +3,13 @@ import { Form, Tooltip, Switch, Input, Button, Select, Divider, Modal, Col, Row,
 import { DataTypeSelect } from '../DataTypeSelect';
 import { Editor } from './Editor';
 import { validateType, isJson } from '@src/lib/util';
-import { PlusOutlined, EyeOutlined, EyeInvisibleOutlined, UnlockOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  UnlockOutlined,
+  ThunderboltOutlined
+} from '@ant-design/icons';
 import { DeleteButton } from './DeleteButton';
 import jsonSchemaGenerator from 'json-schema-generator';
 import { KeyDisplay } from './KeyDisplay';
@@ -13,6 +19,7 @@ export interface EnvVarEditProps {
   item: EnvVar;
   groups: string[];
   blockUI: boolean;
+  secretsEnabled: boolean;
   onUpdate: (field: string, val: string | boolean) => void;
   onCancel: () => void;
   onSave: () => void;
@@ -39,7 +46,7 @@ export const EnvVarEdit = (props: EnvVarEditProps) => {
       try {
         const val = JSON.stringify(JSON.parse(item.value), null, 1);
         updateItem('value', val);
-      } catch (e) { }
+      } catch (e) {}
     }
   };
   const keyError = item.key && item.key.indexOf(' ') > -1; // [TODO] Better validation
@@ -80,8 +87,8 @@ export const EnvVarEdit = (props: EnvVarEditProps) => {
             value={item.key}
           />
         ) : (
-            <KeyDisplay item={item} />
-          )}
+          <KeyDisplay item={item} />
+        )}
       </Form.Item>
       <Form.Item label='Group'>
         <Select
@@ -122,17 +129,19 @@ export const EnvVarEdit = (props: EnvVarEditProps) => {
       <Form.Item label='Data Type'>
         <DataTypeSelect item={item} onUpdate={e => updateItem('dataType', e)} />
       </Form.Item>
-      <Form.Item label='Secret'>
-        <Tooltip title='This cannot be changed or viewed after saving.  WARNING: Anyone with Apex permission will be able to view these values'>
-          <Switch
-            disabled={!item.localOnly}
-            checked={item.secret}
-            onChange={e => props.onUpdate('secret', e)}
-            checkedChildren={<EyeInvisibleOutlined />}
-            unCheckedChildren={<EyeOutlined />}
-          />
-        </Tooltip>
-      </Form.Item>
+      {props.secretsEnabled && (
+        <Form.Item label='Secret'>
+          <Tooltip title='This cannot be changed or viewed after saving.  WARNING: Anyone with Apex permission will be able to view these values'>
+            <Switch
+              disabled={!item.localOnly}
+              checked={item.secret}
+              onChange={e => props.onUpdate('secret', e)}
+              checkedChildren={<EyeInvisibleOutlined />}
+              unCheckedChildren={<EyeOutlined />}
+            />
+          </Tooltip>
+        </Form.Item>
+      )}
       <Form.Item label='Notes'>
         <Input.TextArea
           placeholder='Where/How it is used, valid input, etc...'
@@ -149,7 +158,7 @@ export const EnvVarEdit = (props: EnvVarEditProps) => {
             updateItem('value', val);
           }}
           onEditFinished={editFinished}
-          onEditStart={() => { }}
+          onEditStart={() => {}}
         />
       </Form.Item>
       {item.dataType === 'ANY' && (
@@ -163,7 +172,7 @@ export const EnvVarEdit = (props: EnvVarEditProps) => {
           />
           {isJson(item.value) && !jsonSchemaEditLocked && (
             <Button
-              type="link"
+              type='link'
               icon={<ThunderboltOutlined />}
               onClick={() => {
                 const schemaObj = jsonSchemaGenerator(JSON.parse(item.value));
@@ -173,13 +182,17 @@ export const EnvVarEdit = (props: EnvVarEditProps) => {
               Generate From Current
             </Button>
           )}
-          {jsonSchemaEditLocked && <Button type="link" onClick={() => setJsonSchemaUnLocked(true)} icon={<UnlockOutlined />}>Unlock Schema</Button>}
+          {jsonSchemaEditLocked && (
+            <Button type='link' onClick={() => setJsonSchemaUnLocked(true)} icon={<UnlockOutlined />}>
+              Unlock Schema
+            </Button>
+          )}
         </Form.Item>
       )}
     </Form>
-  )
+  );
   if (blockUI) {
-    body = <Spin spinning={true} >{body}</Spin>
+    body = <Spin spinning={true}>{body}</Spin>;
   }
 
   return (
