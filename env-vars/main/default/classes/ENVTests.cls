@@ -1,6 +1,19 @@
 // Author: Charles Jonas (charlie@callaway.cloud)
 @isTest
-public class ENVTests {
+global class ENVTests {
+    
+    global static void setCachedVars(ENV__mdt[] vars) {
+        Env.setCachedVars(vars);
+    }
+
+    global static void addCachedVar(ENV__mdt var) {
+        Env.addCachedVar(var);
+    }
+
+    global static void addCachedVars(ENV__mdt[] vars) {
+        Env.addCachedVars(vars);
+    }
+    
     @isTest
     static void testString() {
         String key = 'abc';
