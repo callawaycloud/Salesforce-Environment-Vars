@@ -35,6 +35,19 @@ global class Env {
   @testVisible
   static void setCachedVars(ENV__mdt[] vars) {
     cachedVars = new Map<String, ENV__mdt>();
+    addCachedVars(vars);
+  }
+
+  @testVisible
+  static void addCachedVar(ENV__mdt var) {
+    addCachedVars(new List<ENV__mdt>{var});
+  }
+
+  @testVisible
+  static void addCachedVars(ENV__mdt[] vars) {
+    if (cachedVars == null) {
+      cachedVars = new Map<String, ENV__mdt>();
+    }
     for (ENV__mdt var : vars) {
       cachedVars.put(var.DeveloperName, var);
     }
