@@ -4,7 +4,7 @@
             "path": "env-vars",
             "package": "env-vars",
             "versionName": "ver 1.0",
-            "versionNumber": "1.0.3.NEXT",
+            "versionNumber": "1.0.4.NEXT",
             "default": true
         },
         {
