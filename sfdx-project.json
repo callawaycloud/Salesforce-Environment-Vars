@@ -4,7 +4,7 @@
             "path": "env-vars",
             "package": "env-vars",
             "versionName": "ver 1.0",
-            "versionNumber": "1.0.5.NEXT",
+            "versionNumber": "1.0.6.NEXT",
             "default": true
         },
         {
@@ -47,6 +47,11 @@
         "env-vars@1.0.1-1": "04t1C000000lIWFQA2",
         "env-vars@1.0.3-1": "04t6O000001InNhQAK",
         "env-vars@1.0.4-1": "04t6O000001InNmQAK",
-        "env-vars@1.0.5-1": "04t6O000001InNrQAK"
+        "env-vars@1.0.5-1": "04t6O000001InNrQAK",
+        "env-vars@1.0.5-2": "04t6O000001J2gYQAS",
+        "env-vars@1.0.5-3": "04t6O000001J2gdQAC",
+        "env-vars@1.0.5-4": "04t6O000001J2giQAC",
+        "env-vars@1.0.5-5": "04t6O000001J2gnQAC",
+        "env-vars@1.0.6-1": "04t6O000001J2gsQAC"
     }
 }

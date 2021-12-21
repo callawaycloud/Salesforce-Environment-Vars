@@ -131,8 +131,21 @@ global class ENVTests {
         System.assertEquals(value.bar, foo.bar, 'Values Should Match');
     }
 
+    @isTest
+    static void secretsCoverage() {
+        Secrets.enabled();
+        Secrets.invoke(new String[]{});
+
+        try{
+            Secrets.create('');
+        }catch(Exception e){} 
+        try{
+            Secrets.read('');
+        }catch(Exception e){} 
+    }
+
     private class Foo {
         public Decimal bar;
         public String foo;
     }
-}
+} 
