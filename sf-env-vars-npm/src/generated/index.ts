@@ -1,4 +1,4 @@
-import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst } from "ts-force";
+import { Rest, RestObject, SObject, sField, SalesforceFieldType, SFLocation, SFieldProperties, FieldResolver, SOQLQueryParams, buildQuery, FieldProps, PicklistConst, QueryOpts } from "ts-force";
 import "./";
 
 export type EnvVarRecordFields = Partial<FieldProps<EnvVarRecord>>;
@@ -64,23 +64,26 @@ export class EnvVarRecord extends RestObject {
         this.secret = void 0;
         this.val = void 0;
         this.value = void 0;
+        this.__UUID = EnvVarRecord.__UUID;
         this.initObject(fields);
         return new Proxy(this, this.safeUpdateProxyHandler);
     }
 
     public static API_NAME: 'VARS__ENV__mdt' = 'VARS__ENV__mdt';
     public readonly _TYPE_: 'VARS__ENV__mdt' = 'VARS__ENV__mdt';
+    public static __UUID = Symbol();
     private static _fields: { [P in keyof FieldProps<EnvVarRecord>]: SFieldProperties; };
 
     public static get FIELDS() {
         return this._fields = this._fields ? this._fields : EnvVarRecord.getPropertiesMeta<FieldProps<EnvVarRecord>, EnvVarRecord>(EnvVarRecord)
     }
 
-    public static async retrieve(qryParam: ((fields: FieldResolver<EnvVarRecord>) => SOQLQueryParams) | string, restInstance?: Rest): Promise<EnvVarRecord[]> {
-
-        let qry = typeof qryParam === 'function' ? buildQuery(EnvVarRecord, qryParam) : qryParam;
-        return await RestObject.query<EnvVarRecord>(EnvVarRecord, qry, restInstance);
-
+    public static async retrieve(
+        qryParam: ((fields: FieldResolver<EnvVarRecord>) => SOQLQueryParams) | string,
+        opts?: QueryOpts,
+    ): Promise<EnvVarRecord[]> {
+        const qry = typeof qryParam === 'function' ? buildQuery(EnvVarRecord, qryParam) : qryParam;
+        return await RestObject.query<EnvVarRecord>(EnvVarRecord, qry, opts);
     }
 
     public static fromSFObject(sob: SObject): EnvVarRecord {
